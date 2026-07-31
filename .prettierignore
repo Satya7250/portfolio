@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Coverage
+coverage
+
+# Vercel
+.vercel
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
