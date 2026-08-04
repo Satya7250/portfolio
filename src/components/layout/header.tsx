@@ -46,29 +46,30 @@ export default function Navbar() {
   const lastY = useRef(0);
   const controls = useAnimationControls();
 
-  useEffect(() => {
-    lastY.current = window.scrollY;
+useEffect(() => {
+  lastY.current = window.scrollY;
 
-    const onScroll = () => {
-      const y = window.scrollY;
-      const diff = y - lastY.current;
+  const onScroll = () => {
+    const y = window.scrollY;
+    const diff = y - lastY.current;
 
-      if (y < 80) {
-        setHidden(false);
-      } else if (diff > 4) {
-        setHidden(true); // scrolling down -> hide
-      } else if (diff < -4) {
-        setHidden(false); // scrolling up -> show
-        setOpen(false); // ...and close the desktop menu
-        setSheetOpen(false); // ...and close the mobile menu
-      }
+    if (y < 80) {
+      setHidden(false);
+      setActiveHash(''); // back at hero — clear active section
+    } else if (diff > 4) {
+      setHidden(true);
+    } else if (diff < -4) {
+      setHidden(false);
+      setOpen(false);
+      setSheetOpen(false);
+    }
 
-      lastY.current = y;
-    };
+    lastY.current = y;
+  };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  return () => window.removeEventListener('scroll', onScroll);
+}, []);
 
   useEffect(() => {
     controls.start(hidden ? 'hidden' : 'visible');
