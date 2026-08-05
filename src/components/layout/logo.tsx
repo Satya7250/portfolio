@@ -3,10 +3,7 @@ type LogoProps = {
   className?: string;
 };
 
-export default function Logo({
-  size = 48,
-  className = "",
-}: LogoProps) {
+export default function Logo({ size = 48, className = '' }: LogoProps) {
   return (
     <svg
       width={size}
