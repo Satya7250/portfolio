@@ -46,30 +46,30 @@ export default function Navbar() {
   const lastY = useRef(0);
   const controls = useAnimationControls();
 
-useEffect(() => {
-  lastY.current = window.scrollY;
+  useEffect(() => {
+    lastY.current = window.scrollY;
 
-  const onScroll = () => {
-    const y = window.scrollY;
-    const diff = y - lastY.current;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const diff = y - lastY.current;
 
-    if (y < 80) {
-      setHidden(false);
-      setActiveHash(''); // back at hero — clear active section
-    } else if (diff > 4) {
-      setHidden(true);
-    } else if (diff < -4) {
-      setHidden(false);
-      setOpen(false);
-      setSheetOpen(false);
-    }
+      if (y < 80) {
+        setHidden(false);
+        setActiveHash(''); // back at hero — clear active section
+      } else if (diff > 4) {
+        setHidden(true);
+      } else if (diff < -4) {
+        setHidden(false);
+        setOpen(false);
+        setSheetOpen(false);
+      }
 
-    lastY.current = y;
-  };
+      lastY.current = y;
+    };
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  return () => window.removeEventListener('scroll', onScroll);
-}, []);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     controls.start(hidden ? 'hidden' : 'visible');
@@ -92,7 +92,7 @@ useEffect(() => {
           if (entry.isIntersecting) setActiveHash(`#${entry.target.id}`);
         });
       },
-      { rootMargin: '-40% 0px -50% 0px' }
+      { rootMargin: '-40% 0px -50% 0px' },
     );
 
     sections.forEach((s) => observer.observe(s));
@@ -120,16 +120,10 @@ useEffect(() => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
-        <Link
-          href="/"
-          aria-label="Home"
-          className="group flex items-center gap-1"
-        >
+        <Link href="/" aria-label="Home" className="group flex items-center gap-1">
           <Logo size={45} />
 
-          <span className="text-foreground text-lg font-bold tracking-tight">
-            Portfolio
-          </span>
+          <span className="text-foreground text-lg font-bold tracking-tight">Portfolio</span>
         </Link>
 
         {/* Right side: desktop reveal-on-click nav */}
@@ -144,7 +138,11 @@ useEffect(() => {
             {navigationLinks.map((item) => {
               const isActive = activeHash === item.href;
               return (
-                <motion.div key={item.name} variants={linkVariants} style={{ pointerEvents: open ? 'auto' : 'none' }}>
+                <motion.div
+                  key={item.name}
+                  variants={linkVariants}
+                  style={{ pointerEvents: open ? 'auto' : 'none' }}
+                >
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}

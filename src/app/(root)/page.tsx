@@ -1,15 +1,16 @@
-import HeroText from "@/components/home/heroText";
-import OrbitFeatures from "@/components/home/orbit";
-import ScrollIndicator from "@/components/home/ScrollIndicator";
-import AboutMe from "@/components/home/aboutMe";
-import SectionHeading from "@/components/common/section-heading";
-import { getProfile } from "@/lib/profile";
+import HeroText from '@/components/home/heroText';
+import OrbitFeatures from '@/components/home/orbit';
+import ScrollIndicator from '@/components/home/ScrollIndicator';
+import AboutMe from '@/components/home/aboutMe';
+import SectionHeading from '@/components/common/section-heading';
+import { getProfile } from '@/lib/profile';
+import TechStackSection from '@/components/home/stack/techStackSection';
 
 export default async function Home() {
   const profile = await getProfile();
 
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="bg-background relative overflow-hidden">
       {/* Hero */}
       <section
         id="home"
@@ -32,11 +33,7 @@ export default async function Home() {
       </section>
 
       {/* About */}
-      <section
-        id="about"
-        aria-labelledby="about-heading"
-        className="px-6 py-24"
-      >
+      <section id="about" aria-labelledby="about-heading" className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow="Get To Know Me"
@@ -53,6 +50,19 @@ export default async function Home() {
             role="Full Stack Developer"
             bio="I'm a passionate Full Stack Developer specializing in Next.js, React, Node.js, Spring Boot, AI-powered applications, and scalable backend systems. I enjoy transforming complex ideas into fast, intuitive, and maintainable digital products."
           />
+        </div>
+      </section>
+
+      {/* Tech */}
+      <section id="stack" aria-labelledby="tech-heading">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Technologies I Use"
+            title="My Tech Stack"
+            description="Explore the tools and technologies I leverage to build modern web applications."
+            headingId="tech-heading"
+          />
+          <TechStackSection />
         </div>
       </section>
     </main>
