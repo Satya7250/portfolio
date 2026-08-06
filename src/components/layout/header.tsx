@@ -6,11 +6,13 @@ import { motion, useAnimationControls } from 'motion/react';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Logo from '@/components/layout/logo';
 
+const getSectionHref = (id: string) => `/#${id}`;
+
 const navigationLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Stack', href: '#stack' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About', href: getSectionHref('about'), id: 'about' },
+  { name: 'Stack', href: getSectionHref('stack'), id: 'stack' },
+  { name: 'Projects', href: getSectionHref('projects'), id: 'projects' },
+  { name: 'Contact', href: getSectionHref('contact'), id: 'contact' },
 ];
 
 // A different subtle background tint per section, so the bar visually
@@ -18,10 +20,10 @@ const navigationLinks = [
 // plain background color before any section has been scrolled into view.
 const SECTION_BACKGROUND: Record<string, string> = {
   '': 'bg-background',
-  '#about': 'bg-muted',
-  '#stack': 'bg-accent',
-  '#projects': 'bg-secondary',
-  '#contact': 'bg-primary/10',
+  [getSectionHref('about')]: 'bg-muted',
+  [getSectionHref('stack')]: 'bg-accent',
+  [getSectionHref('projects')]: 'bg-secondary',
+  [getSectionHref('contact')]: 'bg-primary/10',
 };
 
 const containerVariants = {
@@ -81,21 +83,21 @@ export default function Navbar() {
 
   useEffect(() => {
     const sections = navigationLinks
-      .map((l) => document.querySelector(l.href))
-      .filter(Boolean) as Element[];
+      .map((link) => document.getElementById(link.id))
+      .filter(Boolean) as HTMLElement[];
 
     if (sections.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveHash(`#${entry.target.id}`);
+          if (entry.isIntersecting) setActiveHash(getSectionHref(entry.target.id));
         });
       },
       { rootMargin: '-40% 0px -50% 0px' },
     );
 
-    sections.forEach((s) => observer.observe(s));
+    sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 

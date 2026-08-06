@@ -29,18 +29,20 @@ const socialLinks = [
   },
 ];
 
+const getSectionHref = (id: string) => `/#${id}`;
+
 const navigationLinks = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '#about' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About', href: getSectionHref('about') },
+  { name: 'Projects', href: getSectionHref('projects') },
+  { name: 'Contact', href: getSectionHref('contact') },
 ];
 
 const resourceLinks = [
   { name: 'Resume', href: '/resume.pdf' },
   { name: 'Blog', href: '/blog' },
-  { name: 'Tech Stack', href: '#stack' },
-  { name: 'Certificates', href: '#certificates' },
+  { name: 'Tech Stack', href: getSectionHref('stack') },
+  { name: 'Certificates', href: getSectionHref('certificates') },
 ];
 
 const legalLinks = [

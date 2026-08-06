@@ -5,6 +5,7 @@ import AboutMe from '@/components/home/aboutMe';
 import SectionHeading from '@/components/common/section-heading';
 import { getProfile } from '@/lib/profile';
 import TechStackSection from '@/components/home/stack/techStackSection';
+import { ProjectsSection } from '@/components/home/projects/projects-section';
 
 export default async function Home() {
   const profile = await getProfile();
@@ -54,7 +55,7 @@ export default async function Home() {
       </section>
 
       {/* Tech */}
-      <section id="stack" aria-labelledby="tech-heading">
+      <section id="stack" aria-labelledby="tech-heading" className="py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow="Technologies I Use"
@@ -63,6 +64,19 @@ export default async function Home() {
             headingId="tech-heading"
           />
           <TechStackSection />
+        </div>
+      </section>
+
+      {/* Projects */}
+      <section id="projects" aria-labelledby="projects-heading" className="py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            eyebrow="FEATURED WORK"
+            title="Featured Projects"
+            description="A collection of projects that showcase my skills in building scalable, responsive, and user-focused applications."
+            headingId="projects-heading"
+          />
+          <ProjectsSection />
         </div>
       </section>
     </main>
