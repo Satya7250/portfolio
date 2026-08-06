@@ -6,6 +6,7 @@ import {
   SiTypescript,
   SiCplusplus,
   SiC,
+  SiSharp,
   SiPython,
   SiHtml5,
   SiCss,
@@ -76,6 +77,153 @@ function OpenAIIcon({ className = 'h-8 w-8' }: { className?: string }) {
   );
 }
 
+const THEME_TEXT_COLOR = 'var(--foreground)';
+
+const brandColorMap: Record<string, string> = {
+  javascript: '#F7DF1E',
+  typescript: '#3178C6',
+  java: '#E51F24',
+  cpp: '#00599C',
+  c: '#00599C',
+  csharp: '#239120',
+  python: '#3776AB',
+  html: '#E34F26',
+  html5: '#E34F26',
+  css: '#1572B6',
+  css3: '#1572B6',
+  nextjs: '#000000',
+  next: '#000000',
+  react: '#61DAFB',
+  reactjs: '#61DAFB',
+  tailwind: '#06B6D4',
+  tailwindcss: '#06B6D4',
+  motion: '#0055FF',
+  framer: '#0055FF',
+  shadcn: '#000000',
+  shadcnui: '#000000',
+  nodejs: '#5FA04E',
+  node: '#5FA04E',
+  netlify: '#00C7B7',
+  express: '#000000',
+  expressjs: '#000000',
+  springboot: '#6DB33F',
+  spring: '#6DB33F',
+  trpc: '#398CCB',
+  graphql: '#E10098',
+  prisma: '#2D3748',
+  postgresql: '#4169E1',
+  postgres: '#4169E1',
+  postman: '#FF6C37',
+  mongodb: '#47A248',
+  mongo: '#47A248',
+  mysql: '#4479A1',
+  redis: '#DC382D',
+  supabase: '#3ECF8E',
+  docker: '#2496ED',
+  git: '#F05032',
+  githubactions: '#2088FF',
+  github: '#181717',
+  vercel: '#000000',
+  turborepo: '#EF4444',
+  fastapi: '#009688',
+  aws: '#FF9900',
+  amazonwebservices: '#FF9900',
+  gcp: '#4285F4',
+  googlecloud: '#4285F4',
+  kubernetes: '#326CE5',
+  k8s: '#326CE5',
+  linux: '#FCC624',
+  rust: '#000000',
+  go: '#00ADD8',
+  golang: '#00ADD8',
+  kotlin: '#7F52FF',
+  swift: '#F05138',
+  flutter: '#02569B',
+  vue: '#4FC08D',
+  vuejs: '#4FC08D',
+  angular: '#DD0031',
+  svelte: '#FF3E00',
+  figma: '#F24E1E',
+  firebase: '#FFCA28',
+  nginx: '#009639',
+  tensorflow: '#FF6F00',
+  pytorch: '#EE4C2C',
+};
+
+const monochromeIconKeys = new Set([
+  'github',
+  'nextjs',
+  'next',
+  'vercel',
+  'express',
+  'expressjs',
+  'shadcn',
+  'shadcnui',
+  'terminal',
+  'puzzle',
+  'messagesquarecode',
+  'bot',
+  'searchcode',
+  'gitbranch',
+  'code2',
+  'binary',
+]);
+
+// Aliases that must be resolved BEFORE the symbol-stripping regex runs,
+// because stripping symbols alone would collapse them into other keys
+// (e.g. "C++" -> "c", "C#" -> "c", ".NET" -> "net").
+const preNormalizeAliases: Record<string, string> = {
+  'c++': 'cpp',
+  'c#': 'csharp',
+  '.net': 'dotnet',
+};
+
+function normalizeIconKey(raw: string): string {
+  const lower = raw.trim().toLowerCase();
+  if (preNormalizeAliases[lower]) {
+    return preNormalizeAliases[lower];
+  }
+  return lower.replace(/[^a-z0-9]/g, '');
+}
+
+function normalizeNeutralColor(value?: string) {
+  if (!value) return undefined;
+  return value.trim().toLowerCase();
+}
+
+function isNeutralBrandColor(value?: string) {
+  const normalized = normalizeNeutralColor(value);
+  return normalized === '#fff' || normalized === '#ffffff' || normalized === 'white';
+}
+
+function resolveIconColor({
+  explicitColor,
+  brandColor,
+  iconKey,
+}: {
+  explicitColor?: string;
+  brandColor?: string;
+  iconKey: string;
+}) {
+  // An explicit color prop always wins, even for keys we'd otherwise force
+  // to monochrome — callers who pass `color` explicitly are opting out.
+  if (explicitColor) {
+    return isNeutralBrandColor(explicitColor) ? THEME_TEXT_COLOR : explicitColor;
+  }
+
+  if (monochromeIconKeys.has(iconKey)) {
+    return THEME_TEXT_COLOR;
+  }
+
+  const candidateColor = brandColor ?? brandColorMap[iconKey];
+
+  if (isNeutralBrandColor(candidateColor)) {
+    return THEME_TEXT_COLOR;
+  }
+
+  return candidateColor ?? THEME_TEXT_COLOR;
+}
+
 // Normalized lookup map for dynamic skill resolution
 const normalizedMap: Record<string, React.ComponentType<{ className?: string }>> = {
   javascript: SiJavascript,
@@ -85,6 +233,7 @@ const normalizedMap: Record<string, React.ComponentType<{ className?: string }>>
   java: FaJava,
   cpp: SiCplusplus,
   c: SiC,
+  csharp: SiSharp,
   python: SiPython,
   html: SiHtml5,
   html5: SiHtml5,
@@ -168,10 +317,21 @@ interface TechIconProps {
   icon?: string;
   className?: string;
   color?: string;
+  brandColor?: string;
 }
 
-export default function TechIcon({ name, icon, className = 'h-10 w-10', color }: TechIconProps) {
-  // 1. If an image or SVG URL was supplied from Admin Panel / DB
+export default function TechIcon({
+  name,
+  icon,
+  className = 'h-10 w-10',
+  color,
+  brandColor,
+}: TechIconProps) {
+  // 1. If an image or SVG URL was supplied from Admin Panel / DB.
+  // Note: `color`/`brandColor` cannot tint a raster/external image via CSS
+  // `color`, so we don't pretend to support that here — the wrapper's
+  // `currentColor` is set in case the URL happens to be an inline `<img>`
+  // of an SVG that itself uses currentColor (rare, but harmless to set).
   if (
     icon &&
     (icon.startsWith('http://') ||
@@ -180,17 +340,26 @@ export default function TechIcon({ name, icon, className = 'h-10 w-10', color }:
       icon.startsWith('data:'))
   ) {
     return (
-      <img src={icon} alt={name} className={`${className} object-contain`} style={{ color }} />
+      <img
+        src={icon}
+        alt={name}
+        title={name}
+        loading="lazy"
+        decoding="async"
+        className={`${className} object-contain`}
+      />
     );
   }
 
-  // 2. Normalize key string (remove spaces, dots, dashes, special chars)
-  const targetKey = (icon || name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  // 2. Normalize key string. C++/C#/.NET are special-cased before symbol
+  // stripping so they don't collapse into "c" / "net".
+  const targetKey = normalizeIconKey(icon || name);
 
   const IconComponent = normalizedMap[targetKey] || Terminal;
+  const resolvedColor = resolveIconColor({ explicitColor: color, brandColor, iconKey: targetKey });
 
   return (
-    <div style={{ color }}>
+    <div style={{ color: resolvedColor }}>
       <IconComponent className={className} />
     </div>
   );

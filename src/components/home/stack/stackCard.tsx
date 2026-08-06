@@ -37,11 +37,12 @@ export default function StackCard({ category }: Props) {
                   icon={tech.icon}
                   className="h-10 w-10 transition-transform duration-300"
                   color={tech.brandColor}
+                  brandColor={tech.brandColor}
                 />
               </div>
 
               {/* Tech Name Label */}
-              <span className="text-sm font-medium text-neutral-300 transition-colors duration-200 group-hover:text-white">
+              <span className="text-foreground group-hover:text-foreground/80 text-sm font-medium transition-colors duration-200">
                 {tech.name}
               </span>
             </motion.div>

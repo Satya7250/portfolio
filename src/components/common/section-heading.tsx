@@ -8,6 +8,9 @@ interface SectionHeadingProps {
   align?: 'left' | 'center';
   as?: 'h2' | 'h3';
   className?: string;
+  eyebrowClassName?: string;
+  titleClassName?: string;
+  descriptionClassName?: string;
 }
 
 export default function SectionHeading({
@@ -18,18 +21,30 @@ export default function SectionHeading({
   align = 'center',
   as = 'h2',
   className,
+  eyebrowClassName,
+  titleClassName,
+  descriptionClassName,
 }: SectionHeadingProps) {
   const Heading = as;
 
   return (
     <header className={cn('mb-10', align === 'center' ? 'text-center' : 'text-left', className)}>
       {eyebrow && (
-        <p className="text-sm font-semibold tracking-[0.3em] text-emerald-500 uppercase">
+        <p
+          className={cn(
+            'text-sm font-semibold tracking-[0.3em] uppercase',
+            'text-primary',
+            eyebrowClassName,
+          )}
+        >
           {eyebrow}
         </p>
       )}
 
-      <Heading id={headingId} className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+      <Heading
+        id={headingId}
+        className={cn('mt-3 text-4xl font-bold tracking-tight sm:text-5xl', titleClassName)}
+      >
         {title}
       </Heading>
 
@@ -38,6 +53,7 @@ export default function SectionHeading({
           className={cn(
             'text-muted-foreground mt-5 text-lg leading-8',
             align === 'center' && 'mx-auto max-w-2xl',
+            descriptionClassName,
           )}
         >
           {description}
