@@ -4,6 +4,6 @@ export type Profile = {
 
 export async function getProfile(): Promise<Profile> {
   return {
-    resumeUrl: '/resume.pdf',
+    resumeUrl: '/resume/resume-s.pdf',
   };
 }
