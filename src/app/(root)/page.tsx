@@ -6,6 +6,7 @@ import SectionHeading from '@/components/common/section-heading';
 import { getProfile } from '@/lib/profile';
 import TechStackSection from '@/components/home/stack/techStackSection';
 import { ProjectsSection } from '@/components/home/projects/projects-section';
+import BlogsSection from '@/components/home/blogs/blogs-section';
 
 export default async function Home() {
   const profile = await getProfile();
@@ -77,6 +78,23 @@ export default async function Home() {
             headingId="projects-heading"
           />
           <ProjectsSection />
+        </div>
+      </section>
+
+      {/* Blogs */}
+      <section
+        id="blogs"
+        aria-labelledby="blogs-heading"
+        className="py-24"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            eyebrow="WRITING"
+            title="Latest Articles"
+            description="Insights, tutorials, and development notes covering web development, JavaScript, React, and modern software engineering."
+            headingId="blogs-heading"
+          />
+          <BlogsSection />
         </div>
       </section>
     </main>
