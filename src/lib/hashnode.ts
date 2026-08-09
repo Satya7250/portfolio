@@ -1,4 +1,4 @@
-import Parser from "rss-parser";
+import Parser from 'rss-parser';
 
 export interface BlogPost {
   title: string;
@@ -9,7 +9,7 @@ export interface BlogPost {
 
 const parser = new Parser();
 
-const FEED_URL = "https://satyaa.hashnode.dev/rss.xml";
+const FEED_URL = 'https://satyaa.hashnode.dev/rss.xml';
 
 export async function getLatestBlogs(): Promise<BlogPost[]> {
   try {
@@ -25,23 +25,18 @@ export async function getLatestBlogs(): Promise<BlogPost[]> {
     const feed = await parser.parseString(xml);
 
     return feed.items.slice(0, 3).map((item: any) => ({
-      title: item.title ?? "",
-      link: item.link ?? "",
-      pubDate: item.pubDate ?? "",
+      title: item.title ?? '',
+      link: item.link ?? '',
+      pubDate: item.pubDate ?? '',
       contentSnippet:
-        (
-          item.description ||
-          item.contentSnippet ||
-          item.content ||
-          ""
-        )
-          .replace(/<[^>]*>/g, "")
-          .replace(/\s+/g, " ")
+        (item.description || item.contentSnippet || item.content || '')
+          .replace(/<[^>]*>/g, '')
+          .replace(/\s+/g, ' ')
           .trim()
-          .slice(0, 100) + "...",
+          .slice(0, 100) + '...',
     }));
   } catch (error) {
-    console.error("Error fetching Hashnode blogs:", error);
+    console.error('Error fetching Hashnode blogs:', error);
     return [];
   }
 }

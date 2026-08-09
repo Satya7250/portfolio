@@ -7,6 +7,8 @@ import { getProfile } from '@/lib/profile';
 import TechStackSection from '@/components/home/stack/techStackSection';
 import { ProjectsSection } from '@/components/home/projects/projects-section';
 import BlogsSection from '@/components/home/blogs/blogs-section';
+import { CertificationsSection } from '@/components/home/certificate/certificate-section';
+import { certificates } from '@/lib/certificate';
 
 export default async function Home() {
   const profile = await getProfile();
@@ -82,11 +84,7 @@ export default async function Home() {
       </section>
 
       {/* Blogs */}
-      <section
-        id="blogs"
-        aria-labelledby="blogs-heading"
-        className="py-24"
-      >
+      <section id="blogs" aria-labelledby="blogs-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
             eyebrow="WRITING"
@@ -95,6 +93,20 @@ export default async function Home() {
             headingId="blogs-heading"
           />
           <BlogsSection />
+        </div>
+      </section>
+
+      {/* Certifications */}
+      <section id="certifications" aria-labelledby="certifications-heading" className="py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            eyebrow="CREDENTIALS"
+            title="Certifications & Achievements"
+            description="Certifications and achievements that showcase my technical expertise and continuous learning."
+            headingId="certifications-heading"
+          />
+
+          <CertificationsSection certificates={certificates} />
         </div>
       </section>
     </main>
