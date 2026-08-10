@@ -9,6 +9,7 @@ import { ProjectsSection } from '@/components/home/projects/projects-section';
 import BlogsSection from '@/components/home/blogs/blogs-section';
 import { CertificationsSection } from '@/components/home/certificate/certificate-section';
 import { certificates } from '@/lib/certificate';
+import ContactSection from '@/components/home/contact/contact';
 
 export default async function Home() {
   const profile = await getProfile();
@@ -107,6 +108,24 @@ export default async function Home() {
           />
 
           <CertificationsSection certificates={certificates} />
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section
+        id="contact"
+        aria-labelledby="contact-heading"
+        className="py-24"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            eyebrow="LET'S CONNECT"
+            title="Get In Touch"
+            description="Have a project in mind, an internship opportunity, or just want to connect? I'd love to hear from you."
+            headingId="contact-heading"
+          />
+
+          <ContactSection />
         </div>
       </section>
     </main>
