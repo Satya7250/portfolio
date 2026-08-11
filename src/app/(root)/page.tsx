@@ -112,11 +112,7 @@ export default async function Home() {
       </section>
 
       {/* Contact */}
-      <section
-        id="contact"
-        aria-labelledby="contact-heading"
-        className="py-24"
-      >
+      <section id="contact" aria-labelledby="contact-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
             eyebrow="LET'S CONNECT"

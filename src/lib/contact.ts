@@ -3,5 +3,5 @@ export interface Contact {
 }
 
 export const contact: Contact = {
-  email: "satyaprakashh.dev@gmail.com",
+  email: 'satyaprakashh.dev@gmail.com',
 };
