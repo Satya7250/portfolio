@@ -79,3 +79,37 @@ export const resume = pgTable("resume", {
     .defaultNow()
     .notNull(),
 });
+
+
+// About
+export const about = pgTable("about", {
+  id: uuid("id")
+    .defaultRandom()
+    .primaryKey(),
+
+  // Section heading
+  eyebrow: text("eyebrow").notNull(),
+
+  title: text("title").notNull(),
+
+  description: text("description").notNull(),
+
+  // AboutMe component
+  imageSrc: text("image_src").notNull(),
+
+  imageAlt: text("image_alt").notNull(),
+
+  intro: text("intro").notNull(),
+
+  name: text("name").notNull(),
+
+  role: text("role").notNull(),
+
+  bio: text("bio").notNull(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});
