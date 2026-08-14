@@ -39,7 +39,7 @@ const navigationLinks = [
 ];
 
 const resourceLinks = [
-  { name: 'Resume', href: '/resume/resume-s.pdf' },
+  { name: 'Resume', href: '/resume' },
   { name: 'Blog', href: '/blog' },
   { name: 'Tech Stack', href: getSectionHref('stack') },
   { name: 'Certificates', href: getSectionHref('certificates') },
