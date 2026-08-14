@@ -8,14 +8,11 @@ import {
   DatabaseIcon,
   FileTextIcon,
   BriefcaseBusinessIcon,
-  ChartBarIcon,
   FileIcon,
-  Settings2Icon,
   GlobeIcon,
-  UserIcon,
+  User,
 } from "lucide-react";
 
-import { NavDocuments } from "@/components/admin/dashboard/nav-documents";
 import { NavMain } from "@/components/admin/dashboard/nav-main";
 import { NavSecondary } from "@/components/admin/dashboard/nav-secondary";
 import { NavUser } from "@/components/admin/dashboard/nav-user";
@@ -33,9 +30,9 @@ import {
 
 const data = {
   user: {
-  name: "Satya Prakash",
-  email: "satyaprakashh.dev@gmail.com",
-  avatar: "/images/profile.png",
+    name: "Satya Prakash",
+    email: "satyaprakashh.dev@gmail.com",
+    avatar: "/images/profile.png",
   },
 
   navMain: [
@@ -43,6 +40,16 @@ const data = {
       title: "Dashboard",
       url: "/admin/dashboard",
       icon: <LayoutDashboardIcon />,
+    },
+    {
+      title: "About",
+      url: "/admin/dashboard/about",
+      icon: <User />,
+    },
+    {
+      title: "Resume",
+      url: "/admin/dashboard/resume",
+      icon: <FileIcon />,
     },
     {
       title: "Projects",
@@ -66,41 +73,16 @@ const data = {
     },
   ],
 
-  documents: [
-    {
-      name: "Messages",
-      url: "/admin/dashboard/messages",
-      icon: <UserIcon />,
-    },
-    {
-      name: "Analytics",
-      url: "/admin/dashboard/analytics",
-      icon: <ChartBarIcon />,
-    },
-    {
-      name: "Resume",
-      url: "/admin/dashboard/resume",
-      icon: <FileIcon />,
-    },
-  ],
-
   navSecondary: [
     {
       title: "Portfolio",
       url: "/",
       icon: <GlobeIcon />,
     },
-    {
-      title: "Settings",
-      url: "/admin/dashboard/settings",
-      icon: <Settings2Icon />,
-    },
   ],
 };
 
-export function AppSidebar(
-  props: React.ComponentProps<typeof Sidebar>
-) {
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -112,9 +94,7 @@ export function AppSidebar(
             >
               <Link href="/admin/dashboard">
                 <Logo />
-                <span className="text-base font-semibold">
-                  Portfolio
-                </span>
+                <span className="text-base font-semibold">Portfolio</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -124,12 +104,7 @@ export function AppSidebar(
       <SidebarContent>
         <NavMain items={data.navMain} />
 
-        <NavDocuments items={data.documents} />
-
-        <NavSecondary
-          items={data.navSecondary}
-          className="mt-auto"
-        />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter>

@@ -3,16 +3,18 @@ import OrbitFeatures from '@/components/home/orbit';
 import ScrollIndicator from '@/components/home/ScrollIndicator';
 import AboutMe from '@/components/home/aboutMe';
 import SectionHeading from '@/components/common/section-heading';
-import { getProfile } from '@/lib/resume';
 import TechStackSection from '@/components/home/stack/techStackSection';
-import { ProjectsSection } from '@/components/home/projects/projects-section';
 import BlogsSection from '@/components/home/blogs/blogs-section';
+import ContactSection from '@/components/home/contact/contact';
+import { getProfile } from '@/lib/resume';
+import { getAboutSection } from "@/lib/about";
+import { ProjectsSection } from '@/components/home/projects/projects-section';
 import { CertificationsSection } from '@/components/home/certificate/certificate-section';
 import { certificates } from '@/lib/certificate';
-import ContactSection from '@/components/home/contact/contact';
 
 export default async function Home() {
   const profile = await getProfile();
+  const about = await getAboutSection();
 
   return (
     <main className="bg-background relative overflow-hidden">
@@ -38,23 +40,32 @@ export default async function Home() {
       </section>
 
       {/* About */}
-      <section id="about" aria-labelledby="about-heading" className="px-6 py-24">
+      <section
+        id="about"
+        aria-labelledby="about-heading"
+        className="px-6 py-24"
+      >
         <div className="mx-auto max-w-7xl">
           <SectionHeading
-            eyebrow="Get To Know Me"
-            title="About Me"
-            description="A passionate developer building modern, scalable, and user-focused digital experiences."
+            eyebrow={about?.eyebrow ?? "Get To Know Me"}
+            title={about?.title ?? "About Me"}
+            description={
+              about?.description ??
+              "A passionate developer building modern, scalable, and user-focused digital experiences."
+            }
             headingId="about-heading"
           />
 
-          <AboutMe
-            imageSrc="/images/profile.png"
-            imageAlt="Portrait of Satya Prakash"
-            intro="Building modern software with clean architecture and exceptional user experiences."
-            name="Satya Prakash"
-            role="Full Stack Developer"
-            bio="I'm a passionate Full Stack Developer specializing in Next.js, React, Node.js, Spring Boot, AI-powered applications, and scalable backend systems. I enjoy transforming complex ideas into fast, intuitive, and maintainable digital products."
-          />
+          {about && (
+            <AboutMe
+              imageSrc={about.imageSrc}
+              imageAlt={about.imageAlt}
+              intro={about.intro}
+              name={about.name}
+              role={about.role}
+              bio={about.bio}
+            />
+          )}
         </div>
       </section>
 
