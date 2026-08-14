@@ -5,6 +5,8 @@ import './globals.css';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 
+import { Toaster } from '@/components/ui/sonner';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -81,7 +83,10 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col font-sans">
         <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
           <QueryProvider>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster position="top-right" />
+            </TooltipProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

@@ -60,3 +60,22 @@ export const sessions = pgTable("sessions", {
     .defaultNow()
     .notNull(),
 });
+
+//resume
+export const resume = pgTable("resume", {
+  id: uuid("id")
+    .defaultRandom()
+    .primaryKey(),
+
+  fileName: text("file_name").notNull(),
+
+  fileUrl: text("file_url").notNull(),
+
+  publicId: text("public_id").notNull(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});

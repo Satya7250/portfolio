@@ -3,7 +3,7 @@ import OrbitFeatures from '@/components/home/orbit';
 import ScrollIndicator from '@/components/home/ScrollIndicator';
 import AboutMe from '@/components/home/aboutMe';
 import SectionHeading from '@/components/common/section-heading';
-import { getProfile } from '@/lib/profile';
+import { getProfile } from '@/lib/resume';
 import TechStackSection from '@/components/home/stack/techStackSection';
 import { ProjectsSection } from '@/components/home/projects/projects-section';
 import BlogsSection from '@/components/home/blogs/blogs-section';
