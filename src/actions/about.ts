@@ -10,9 +10,6 @@ import cloudinary from "@/lib/cloudinary";
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function upsertAbout(formData: FormData) {
-  const eyebrow = formData.get("eyebrow")?.toString().trim();
-  const title = formData.get("title")?.toString().trim();
-  const description = formData.get("description")?.toString().trim();
   const imageAlt = formData.get("imageAlt")?.toString().trim();
   const intro = formData.get("intro")?.toString().trim();
   const name = formData.get("name")?.toString().trim();
@@ -20,16 +17,7 @@ export async function upsertAbout(formData: FormData) {
   const bio = formData.get("bio")?.toString().trim();
   const imageFile = formData.get("image");
 
-  if (
-    !eyebrow ||
-    !title ||
-    !description ||
-    !imageAlt ||
-    !intro ||
-    !name ||
-    !role ||
-    !bio
-  ) {
+  if (!imageAlt || !intro || !name || !role || !bio) {
     throw new Error("All fields are required.");
   }
 
@@ -90,9 +78,6 @@ export async function upsertAbout(formData: FormData) {
   }
 
   const values = {
-    eyebrow,
-    title,
-    description,
     imageSrc,
     imageAlt,
     intro,

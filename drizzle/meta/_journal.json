@@ -29,6 +29,27 @@
       "when": 1786730341018,
       "tag": "0003_gifted_warbird",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786789172278,
+      "tag": "0004_many_gressill",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786792678395,
+      "tag": "0005_deep_thundra",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786795089789,
+      "tag": "0006_heavy_romulus",
+      "breakpoints": true
     }
   ]
 }

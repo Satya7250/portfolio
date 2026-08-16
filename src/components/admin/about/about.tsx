@@ -23,9 +23,6 @@ import { Textarea } from "@/components/ui/textarea";
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 type AboutData = {
-  eyebrow: string;
-  title: string;
-  description: string;
   imageSrc: string;
   imageAlt: string;
   intro: string;
@@ -39,9 +36,6 @@ export function AboutManager({ about }: { about: AboutData }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [form, setForm] = React.useState({
-    eyebrow: about?.eyebrow ?? "",
-    title: about?.title ?? "",
-    description: about?.description ?? "",
     imageAlt: about?.imageAlt ?? "",
     intro: about?.intro ?? "",
     name: about?.name ?? "",
@@ -128,55 +122,14 @@ export function AboutManager({ about }: { about: AboutData }) {
       <Card className="border shadow-sm">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-semibold">
-            About Section
+            About Content
           </CardTitle>
           <CardDescription>
-            Update the content shown in the About section of your portfolio.
+            Update your profile image and bio shown in the About section.
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-8">
-          {/* Section heading fields */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Section Heading
-            </h3>
-
-            <div className="grid gap-2">
-              <Label htmlFor="eyebrow">Eyebrow</Label>
-              <Input
-                id="eyebrow"
-                value={form.eyebrow}
-                onChange={updateField("eyebrow")}
-                placeholder="Get To Know Me"
-                disabled={isSaving}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                value={form.title}
-                onChange={updateField("title")}
-                placeholder="About Me"
-                disabled={isSaving}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={form.description}
-                onChange={updateField("description")}
-                placeholder="A passionate developer building modern, scalable, and user-focused digital experiences."
-                rows={2}
-                disabled={isSaving}
-              />
-            </div>
-          </div>
-
           {/* Image */}
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-muted-foreground">
