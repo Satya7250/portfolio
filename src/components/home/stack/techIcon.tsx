@@ -120,6 +120,7 @@ const brandColorMap: Record<string, string> = {
   redis: '#DC382D',
   supabase: '#3ECF8E',
   docker: '#2496ED',
+  vscode: '#2496ED',
   git: '#F05032',
   githubactions: '#2088FF',
   github: '#181717',

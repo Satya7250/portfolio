@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   uuid,
+  integer,
 } from "drizzle-orm/pg-core";
 
 
@@ -86,14 +87,7 @@ export const about = pgTable("about", {
   id: uuid("id")
     .defaultRandom()
     .primaryKey(),
-
-  // Section heading
-  eyebrow: text("eyebrow").notNull(),
-
-  title: text("title").notNull(),
-
-  description: text("description").notNull(),
-
+    
   // AboutMe component
   imageSrc: text("image_src").notNull(),
 
@@ -106,6 +100,55 @@ export const about = pgTable("about", {
   role: text("role").notNull(),
 
   bio: text("bio").notNull(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});
+
+// Tech Stack
+export const techStack = pgTable("tech_stack", {
+  id: uuid("id")
+    .defaultRandom()
+    .primaryKey(),
+
+  name: text("name").notNull(),
+
+  // react, nextjs, nodejs, postgresql, etc.
+  icon: text("icon").notNull(),
+
+  // Frontend, Backend, Database, etc.
+  category: text("category").notNull(),
+
+  brandColor: text("brand_color"),
+
+  sortOrder: integer("sort_order")
+    .default(0)
+    .notNull(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});
+
+export const sectionHeadings = pgTable("section_headings", {
+  id: uuid("id")
+    .defaultRandom()
+    .primaryKey(),
+
+  section: text("section")
+    .notNull()
+    .unique(),
+
+  eyebrow: text("eyebrow").notNull(),
+
+  title: text("title").notNull(),
+
+  description: text("description").notNull(),
 
   updatedAt: timestamp("updated_at", {
     withTimezone: true,

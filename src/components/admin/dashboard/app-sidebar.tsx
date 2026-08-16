@@ -52,14 +52,14 @@ const data = {
       icon: <FileIcon />,
     },
     {
-      title: "Projects",
-      url: "/admin/dashboard/projects",
-      icon: <FolderIcon />,
-    },
-    {
       title: "Skills",
       url: "/admin/dashboard/skills",
       icon: <DatabaseIcon />,
+    },
+    {
+      title: "Projects",
+      url: "/admin/dashboard/projects",
+      icon: <FolderIcon />,
     },
     {
       title: "Certificates",

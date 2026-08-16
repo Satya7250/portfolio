@@ -11,10 +11,31 @@ import { getAboutSection } from "@/lib/about";
 import { ProjectsSection } from '@/components/home/projects/projects-section';
 import { CertificationsSection } from '@/components/home/certificate/certificate-section';
 import { certificates } from '@/lib/certificate';
+import { getTechStackSection } from "@/lib/tech-stack";
+import { getHeading } from '@/lib/section-headings';
 
 export default async function Home() {
-  const profile = await getProfile();
-  const about = await getAboutSection();
+  const [
+    profile,
+    about,
+    techStack,
+    aboutHeading,
+    stackHeading,
+    projectHeading,
+    blogHeading,
+    certificationHeading,
+    contactHeading,
+  ] = await Promise.all([
+    getProfile(),
+    getAboutSection(),
+    getTechStackSection(),
+    getHeading("about"),
+    getHeading("stack"),
+    getHeading("projects"),
+    getHeading("blogs"),
+    getHeading("certifications"),
+    getHeading("contact"),
+  ]);
 
   return (
     <main className="bg-background relative overflow-hidden">
@@ -47,12 +68,9 @@ export default async function Home() {
       >
         <div className="mx-auto max-w-7xl">
           <SectionHeading
-            eyebrow={about?.eyebrow ?? "Get To Know Me"}
-            title={about?.title ?? "About Me"}
-            description={
-              about?.description ??
-              "A passionate developer building modern, scalable, and user-focused digital experiences."
-            }
+            eyebrow={aboutHeading.eyebrow}
+            title={aboutHeading.title}
+            description={aboutHeading.description}
             headingId="about-heading"
           />
 
@@ -73,12 +91,12 @@ export default async function Home() {
       <section id="stack" aria-labelledby="tech-heading" className="py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
-            eyebrow="Technologies I Use"
-            title="My Tech Stack"
-            description="Explore the tools and technologies I leverage to build modern web applications."
+            eyebrow={stackHeading.eyebrow}
+            title={stackHeading.title}
+            description={stackHeading.description}
             headingId="tech-heading"
           />
-          <TechStackSection />
+          <TechStackSection categories={techStack} />
         </div>
       </section>
 
@@ -86,9 +104,9 @@ export default async function Home() {
       <section id="projects" aria-labelledby="projects-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
-            eyebrow="FEATURED WORK"
-            title="Featured Projects"
-            description="A collection of projects that showcase my skills in building scalable, responsive, and user-focused applications."
+            eyebrow={projectHeading.eyebrow}
+            title={projectHeading.title}
+            description={projectHeading.description}
             headingId="projects-heading"
           />
           <ProjectsSection />
@@ -99,9 +117,9 @@ export default async function Home() {
       <section id="blogs" aria-labelledby="blogs-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
-            eyebrow="WRITING"
-            title="Latest Articles"
-            description="Insights, tutorials, and development notes covering web development, JavaScript, React, and modern software engineering."
+            eyebrow={blogHeading.eyebrow}
+            title={blogHeading.title}
+            description={blogHeading.description}
             headingId="blogs-heading"
           />
           <BlogsSection />
@@ -112,9 +130,9 @@ export default async function Home() {
       <section id="certifications" aria-labelledby="certifications-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
-            eyebrow="CREDENTIALS"
-            title="Certifications & Achievements"
-            description="Certifications and achievements that showcase my technical expertise and continuous learning."
+            eyebrow={certificationHeading.eyebrow}
+            title={certificationHeading.title}
+            description={certificationHeading.description}
             headingId="certifications-heading"
           />
 
@@ -126,9 +144,9 @@ export default async function Home() {
       <section id="contact" aria-labelledby="contact-heading" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
-            eyebrow="LET'S CONNECT"
-            title="Get In Touch"
-            description="Have a project in mind, an internship opportunity, or just want to connect? I'd love to hear from you."
+            eyebrow={contactHeading.eyebrow}
+            title={contactHeading.title}
+            description={contactHeading.description}
             headingId="contact-heading"
           />
 
