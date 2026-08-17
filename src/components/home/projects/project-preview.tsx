@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { PROJECT_THEMES } from '@/lib/project-theme';
 import type { Project } from '@/types/project';
 
 interface ProjectPreviewProps {
@@ -10,6 +11,11 @@ interface ProjectPreviewProps {
 }
 
 export function ProjectPreview({ project }: ProjectPreviewProps) {
+  const gradient =
+    project.gradient ??
+    PROJECT_THEMES[project.colorTheme] ??
+    PROJECT_THEMES.purple;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -23,10 +29,10 @@ export function ProjectPreview({ project }: ProjectPreviewProps) {
           'bg-card rounded-3xl border p-3 transition-all duration-500 ease-out',
           'hover:-translate-y-2 hover:shadow-2xl',
           'bg-linear-to-br',
-          project.gradient.from,
-          project.gradient.via,
-          project.gradient.to,
-          project.gradient.border,
+          gradient.from,
+          gradient.via,
+          gradient.to,
+          gradient.border
         )}
       >
         <div className="relative aspect-16/10 overflow-hidden rounded-2xl">

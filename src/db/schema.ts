@@ -135,6 +135,7 @@ export const techStack = pgTable("tech_stack", {
     .notNull(),
 });
 
+//section heading
 export const sectionHeadings = pgTable("section_headings", {
   id: uuid("id")
     .defaultRandom()
@@ -155,4 +156,45 @@ export const sectionHeadings = pgTable("section_headings", {
   })
     .defaultNow()
     .notNull(),
+});
+
+//project
+export const projects = pgTable("projects", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  slug: text("slug").unique().notNull(),
+
+  title: text("title").notNull(),
+
+  description: text("description").notNull(),
+
+  tags: text("tags").array().notNull(),
+
+  image: text("image").notNull(),
+
+  repoUrl: text("repo_url"),
+
+  demoUrl: text("demo_url"),
+
+  colorTheme: text("color_theme")
+    .default("purple")
+    .notNull(),
+
+  sortOrder: integer("sort_order")
+    .default(0)
+    .notNull(),
+
+  isPublished: boolean("is_published")
+    .default(true)
+    .notNull(),
+
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+  }).defaultNow(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

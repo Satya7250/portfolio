@@ -22,15 +22,24 @@ export function ProjectContent({ project }: ProjectContentProps) {
         Featured Project
       </span>
 
-      <h3 className="text-foreground text-5xl font-bold tracking-tight">{project.title}</h3>
+      <h3 className="text-foreground text-5xl font-bold tracking-tight">
+        {project.title}
+      </h3>
 
-      <p className="text-muted-foreground max-w-md leading-relaxed">{project.description}</p>
+      <p className="text-muted-foreground max-w-md leading-relaxed">
+        {project.description}
+      </p>
 
-      <ProjectTags tags={project.tags} />
+      <ProjectTags tags={project.tags ?? []} />
 
-      <div className="mt-2">
-        <ProjectActions repoUrl={project.repoUrl} demoUrl={project.demoUrl} />
-      </div>
+      {(project.repoUrl || project.demoUrl) && (
+        <div className="mt-2">
+          <ProjectActions
+            repoUrl={project.repoUrl ?? ''}
+            demoUrl={project.demoUrl ?? ''}
+          />
+        </div>
+      )}
     </motion.div>
   );
 }
