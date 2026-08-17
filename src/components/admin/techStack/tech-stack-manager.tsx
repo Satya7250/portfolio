@@ -346,16 +346,28 @@ function SortableCategoryList({
   onRefresh: () => void;
 }) {
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
+
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
+
     if (!over || active.id === over.id) return;
 
     const oldIndex = items.findIndex((i) => i.id === active.id);
     const newIndex = items.findIndex((i) => i.id === over.id);
+
     if (oldIndex === -1 || newIndex === -1) return;
 
     const reordered = [...items];
@@ -365,32 +377,44 @@ function SortableCategoryList({
     onReorder(reordered);
   }
 
+  if (!mounted) {
+    return null;
+  }
+
   if (disabled) {
     return (
       <div className="space-y-2">
         {items.map((item) => (
-          <ItemRow key={item.id} item={item} onRefresh={onRefresh} />
+          <ItemRow
+            key={item.id}
+            item={item}
+            onRefresh={onRefresh}
+          />
         ))}
       </div>
     );
   }
 
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={items.map((i) => i.id)}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="space-y-2">
           {items.map((item) => (
             <SortableRow key={item.id} id={item.id}>
-              {(dragHandle) => <ItemRow item={item} dragHandle={dragHandle} onRefresh={onRefresh} />}
+              {(dragHandle) => (
+                <ItemRow
+                  item={item}
+                  dragHandle={dragHandle}
+                  onRefresh={onRefresh}
+                />
+              )}
             </SortableRow>
           ))}
         </div>

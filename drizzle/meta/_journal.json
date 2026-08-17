@@ -50,6 +50,13 @@
       "when": 1786795089789,
       "tag": "0006_heavy_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786987737684,
+      "tag": "0007_silent_major_mapleleaf",
+      "breakpoints": true
     }
   ]
 }

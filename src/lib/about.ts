@@ -6,9 +6,9 @@ export async function getAboutSection() {
   if (!about) return null;
 
   return {
-    eyebrow: about.eyebrow,
-    title: about.title,
-    description: about.description,
+    // eyebrow: about.eyebrow,
+    // title: about.title,
+    // description: about.description,
     imageSrc: about.imageSrc,
     imageAlt: about.imageAlt,
     intro: about.intro,

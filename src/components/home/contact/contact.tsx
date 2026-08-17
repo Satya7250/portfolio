@@ -40,18 +40,20 @@ export default function ContactSection() {
             className={`absolute top-1/2 -right-20 h-40 w-40 -translate-y-1/2 rounded-full ${THEME.glow} opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100`}
           />
 
-          <CardContent className="relative p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className={`rounded-xl border p-3 ${THEME.icon} `}>
+          <CardContent className="relative p-4 sm:p-6 md:p-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                <div className={`shrink-0 rounded-xl border p-3 ${THEME.icon}`}>
                   <Mail className="h-5 w-5" />
                 </div>
 
-                <span className="text-lg font-medium tracking-tight">{contact.email}</span>
+                <span className="min-w-0 break-all text-sm font-medium tracking-tight sm:text-base md:text-lg">
+                  {contact.email}
+                </span>
               </div>
 
               <ArrowUpRight
-                className={`text-muted-foreground h-5 w-5 transition-all duration-300 ${THEME.hoverText} group-hover:translate-x-1 group-hover:-translate-y-1`}
+                className={`hidden sm:block text-muted-foreground h-5 w-5 transition-all duration-300 ${THEME.hoverText} group-hover:translate-x-1 group-hover:-translate-y-1`}
               />
             </div>
           </CardContent>
