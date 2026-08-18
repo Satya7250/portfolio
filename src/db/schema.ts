@@ -198,3 +198,26 @@ export const projects = pgTable("projects", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+// blog
+export const blogs = pgTable("blogs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  slug: text("slug")
+    .notNull()
+    .unique(),
+
+  isVisible: boolean("is_visible")
+    .default(true)
+    .notNull(),
+
+  sortOrder: integer("sort_order")
+    .default(0)
+    .notNull(),
+
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});
