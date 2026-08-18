@@ -117,6 +117,10 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
     [...projects].sort((a, b) => a.sortOrder - b.sortOrder)
   );
 
+  React.useEffect(() => {
+    setItems([...projects].sort((a, b) => a.sortOrder - b.sortOrder));
+  }, [projects]);
+
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [deleteTarget, setDeleteTarget] = React.useState<ProjectRow | null>(
     null
@@ -423,7 +427,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                       </h3>
                       {theme && (
                         <span
-                          className={`size-2.5 rounded-full border ${theme.border} bg-gradient-to-br ${theme.from} ${theme.to}`}
+                          className={`size-2.5 rounded-full border ${theme.border} bg-linear-to-br ${theme.from} ${theme.to}`}
                         />
                       )}
                       {!project.isPublished && (
@@ -660,7 +664,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                       <SelectItem key={key} value={key}>
                         <span className="flex items-center gap-2 capitalize">
                           <span
-                            className={`size-2.5 rounded-full bg-gradient-to-br ${PROJECT_THEMES[key].from} ${PROJECT_THEMES[key].to} border ${PROJECT_THEMES[key].border}`}
+                            className={`size-2.5 rounded-full bg-linear-to-br ${PROJECT_THEMES[key].from} ${PROJECT_THEMES[key].to} border ${PROJECT_THEMES[key].border}`}
                           />
                           {key}
                         </span>

@@ -62,6 +62,11 @@ const data = {
       icon: <FolderIcon />,
     },
     {
+      title: "Blogs",
+      url: "/admin/dashboard/blogs",
+      icon: <FileTextIcon />,
+    },
+    {
       title: "Certificates",
       url: "/admin/dashboard/certificates",
       icon: <FileTextIcon />,
