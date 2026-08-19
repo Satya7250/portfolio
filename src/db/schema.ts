@@ -221,3 +221,35 @@ export const blogs = pgTable("blogs", {
     .defaultNow()
     .notNull(),
 });
+
+// certificate
+export const certifications = pgTable("certifications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  title: text("title").notNull(),
+
+  issuer: text("issuer").notNull(),
+
+  issueDate: text("issue_date"),
+
+  certificateImage: text("certificate_image").notNull(),
+
+  verifyUrl: text("verify_url"),
+
+  isPublished: boolean("is_published")
+    .default(true)
+    .notNull(),
+
+  sortOrder: integer("sort_order")
+    .default(0)
+    .notNull(),
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
