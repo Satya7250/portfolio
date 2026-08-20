@@ -1,55 +1,39 @@
-import type { CertificationRow } from "@/data/certificate";
+import type { InferSelectModel } from "drizzle-orm";
+import { certifications } from "@/db/schema";
 
-export const certificates: CertificationRow[] = [
+export type CertificationRow = InferSelectModel<
+  typeof certifications
+>;
+
+const now = new Date();
+
+export const defaultCertificates: readonly CertificationRow[] = [
   {
-    id: "1",
+    id: "default-1",
     title: "Full Stack Web Development Cohort 2026",
     issuer: "ChaiCode",
-    issuerLogo: "/certificates/chaicode.png",
     issueDate: "Sep 2025",
-    credentialId: "1323851225092717102416272",
-    skills: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "React",
-      "Next.js",
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "Full Stack Development",
-    ],
+    certificateImage:
+      "/certificates/chaicode.png",
     verifyUrl:
       "https://courses.chaicode.com/learn/certificate/13238512-250927",
-    certificateUrl:
-      "https://drive.google.com/file/d/135RuIMnxW8X5R8BXkR5iMmkI56-5ogae/view",
     isPublished: true,
     sortOrder: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: now,
+    updatedAt: now,
   },
-
   {
-    id: "2",
+    id: "default-2",
     title: "Introduction to Large Language Models",
     issuer: "IBM SkillsBuild",
-    issuerLogo: "/certificates/ibm.png",
     issueDate: "Jan 2026",
-    credentialId: "ALM-COURSE_4058915",
-    skills: [
-      "Large Language Models",
-      "Generative AI",
-      "Prompt Engineering",
-      "Natural Language Processing",
-      "AI Fundamentals",
-    ],
+    certificateImage:
+      "/certificates/ibm.png",
     verifyUrl:
-      "https://skills.yourlearning.ibm.com/certificate/share/172107953cewogICJvYmplY3RJZCIgOiAiQUxNLUNPVVJTRV80MDU4OTE1IiwKICAibGVhcm5lckNOVU0iIDogIjY1MzQyNDBSRUciLAogICJvYmplY3RUeXBlIiA6ICJBQ1RJVklUWSIKfQ2a83e7f5c0-10",
-    certificateUrl:
-      "https://drive.google.com/file/d/13G34-wbXDQ0FH2yJ12Ptpu7AwkSRyiVf/view",
+      "https://skills.yourlearning.ibm.com/",
     isPublished: true,
     sortOrder: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: now,
+    updatedAt: now,
   },
-];
+] as const;

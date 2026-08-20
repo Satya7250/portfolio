@@ -2,7 +2,7 @@ import { Certificate } from '@/types/certificate';
 import { CertificateCard } from './certificate-card';
 
 interface CertificationsSectionProps {
-  certificates: Certificate[];
+  certificates: readonly Certificate[];
 }
 
 export function CertificationsSection({ certificates }: CertificationsSectionProps) {
