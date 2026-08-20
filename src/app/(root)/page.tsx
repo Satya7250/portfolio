@@ -10,7 +10,7 @@ import { getProfile } from '@/lib/resume';
 import { getAboutSection } from "@/lib/about";
 import { ProjectsSection } from '@/components/home/projects/projects-section';
 import { CertificationsSection } from '@/components/home/certificate/certificate-section';
-import { certificates } from '@/lib/certificate';
+import { getPublishedCertifications } from '@/data/certificate';
 import { getTechStackSection } from "@/lib/tech-stack";
 import { getHeading } from '@/lib/section-headings';
 
@@ -19,6 +19,7 @@ export default async function Home() {
     profile,
     about,
     techStack,
+    certificates,
     aboutHeading,
     stackHeading,
     projectHeading,
@@ -29,6 +30,7 @@ export default async function Home() {
     getProfile(),
     getAboutSection(),
     getTechStackSection(),
+    getPublishedCertifications(),
     getHeading("about"),
     getHeading("stack"),
     getHeading("projects"),

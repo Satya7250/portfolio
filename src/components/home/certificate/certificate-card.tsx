@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 
-import { BadgeCheck, ExternalLink } from 'lucide-react';
+import { BadgeCheck, ExternalLink, FileText } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 import { Certificate } from '@/types/certificate';
 
@@ -24,6 +25,10 @@ const CERTIFICATE_THEME = {
 
 export function CertificateCard({ certificate }: CertificateCardProps) {
   const theme = CERTIFICATE_THEME;
+  const isPdf = certificate.certificateImage
+    .toLowerCase()
+    .split('?')[0]
+    .endsWith('.pdf');
 
   return (
     <motion.article
@@ -36,6 +41,29 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
       <Card
         className={`group border-border/50 h-full overflow-hidden transition-all duration-300 ${theme.border} hover:shadow-xl ${theme.shadow}`}
       >
+        <div className="relative aspect-video overflow-hidden bg-muted/40">
+          {isPdf ? (
+            <object
+              data={certificate.certificateImage}
+              type="application/pdf"
+              title={`${certificate.title} PDF preview`}
+              className="size-full"
+            >
+              <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2 text-sm">
+                <FileText className="size-8" />
+                PDF certificate
+              </div>
+            </object>
+          ) : (
+            <Image
+              src={certificate.certificateImage}
+              alt={`${certificate.title} certificate`}
+              fill
+              unoptimized
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          )}
+        </div>
         <CardHeader>
           <div className="flex items-start gap-4">
             {certificate.issuerLogo && (
@@ -68,7 +96,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {certificate.skills.length > 0 && (
+          {certificate.skills && certificate.skills.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {certificate.skills.map((skill) => (
                 <span
@@ -90,6 +118,17 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         </CardContent>
 
         <CardFooter className="flex flex-wrap gap-3">
+          <Button asChild variant="outline" size="sm">
+            <a
+              href={certificate.certificateImage}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="size-4" />
+              Preview certificate
+            </a>
+          </Button>
+
           {certificate.verifyUrl && (
             <a
               href={certificate.verifyUrl}
