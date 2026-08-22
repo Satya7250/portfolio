@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   DndContext,
   closestCenter,
@@ -10,38 +10,24 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
   useSortable,
   arrayMove,
   sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { toast } from "sonner";
-import {
-  GripVertical,
-  Plus,
-  Trash2,
-  Loader2,
-  FileText,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { toast } from 'sonner';
+import { GripVertical, Plus, Trash2, Loader2, FileText, Eye, EyeOff } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -50,7 +36,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,14 +46,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
-import {
-  createBlog,
-  deleteBlog,
-  toggleBlogVisibility,
-  reorderBlogs,
-} from "@/actions/blog";
+import { createBlog, deleteBlog, toggleBlogVisibility, reorderBlogs } from '@/actions/blog';
 
 type BlogRow = {
   id: string;
@@ -80,10 +61,10 @@ function slugify(value: string): string {
   return value
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 interface BlogManagerProps {
@@ -93,10 +74,10 @@ interface BlogManagerProps {
 export default function BlogManager({ initialBlogs }: BlogManagerProps) {
   const router = useRouter();
   const [blogs, setBlogs] = useState<BlogRow[]>(
-    [...initialBlogs].sort((a, b) => a.sortOrder - b.sortOrder)
+    [...initialBlogs].sort((a, b) => a.sortOrder - b.sortOrder),
   );
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [rawSlugInput, setRawSlugInput] = useState("");
+  const [rawSlugInput, setRawSlugInput] = useState('');
   const [isCreating, startCreateTransition] = useTransition();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
@@ -115,30 +96,30 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   function handleCreateBlog() {
     if (!slugPreview) {
-      toast.error("Please enter a valid slug");
+      toast.error('Please enter a valid slug');
       return;
     }
 
     const isDuplicate = blogs.some((blog) => blog.slug === slugPreview);
     if (isDuplicate) {
-      toast.error("A blog with this slug already exists");
+      toast.error('A blog with this slug already exists');
       return;
     }
 
     startCreateTransition(async () => {
       try {
         await createBlog({ slug: slugPreview });
-        toast.success("Blog created successfully");
+        toast.success('Blog created successfully');
         setIsCreateOpen(false);
-        setRawSlugInput("");
+        setRawSlugInput('');
         router.refresh();
       } catch (error) {
-        toast.error("Failed to create blog");
+        toast.error('Failed to create blog');
       }
     });
   }
@@ -148,10 +129,10 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
       try {
         await deleteBlog(id);
         setBlogs((prev) => prev.filter((blog) => blog.id !== id));
-        toast.success("Blog deleted successfully");
+        toast.success('Blog deleted successfully');
         router.refresh();
       } catch (error) {
-        toast.error("Failed to delete blog");
+        toast.error('Failed to delete blog');
       } finally {
         setPendingDeleteId(null);
       }
@@ -162,20 +143,16 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
     const previousBlogs = blogs;
     setTogglingId(id);
     setBlogs((prev) =>
-      prev.map((blog) =>
-        blog.id === id ? { ...blog, isVisible: nextVisible } : blog
-      )
+      prev.map((blog) => (blog.id === id ? { ...blog, isVisible: nextVisible } : blog)),
     );
 
     try {
       await toggleBlogVisibility(id, nextVisible);
-      toast.success(
-        nextVisible ? "Blog is now visible" : "Blog is now hidden"
-      );
+      toast.success(nextVisible ? 'Blog is now visible' : 'Blog is now hidden');
       router.refresh();
     } catch (error) {
       setBlogs(previousBlogs);
-      toast.error("Failed to update visibility");
+      toast.error('Failed to update visibility');
     } finally {
       setTogglingId(null);
     }
@@ -195,18 +172,18 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
 
     try {
       await reorderBlogs(reordered.map((blog) => blog.id));
-      toast.success("Blog order updated");
+      toast.success('Blog order updated');
       router.refresh();
     } catch (error) {
       setBlogs(previousBlogs);
-      toast.error("Failed to reorder blogs");
+      toast.error('Failed to reorder blogs');
     }
   }
 
   function handleDialogOpenChange(open: boolean) {
     setIsCreateOpen(open);
     if (!open) {
-      setRawSlugInput("");
+      setRawSlugInput('');
     }
   }
 
@@ -217,7 +194,7 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="mb-3">
           <h1 className="text-2xl font-semibold tracking-tight">Blogs</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Create, reorder, and manage the visibility of your blog posts.
           </p>
         </div>
@@ -233,8 +210,7 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
             <DialogHeader>
               <DialogTitle>Create Blog</DialogTitle>
               <DialogDescription>
-                Enter a title or slug. It will be automatically formatted
-                into a URL-friendly slug.
+                Enter a title or slug. It will be automatically formatted into a URL-friendly slug.
               </DialogDescription>
             </DialogHeader>
 
@@ -247,7 +223,7 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
                   value={rawSlugInput}
                   onChange={(e) => setRawSlugInput(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === 'Enter') {
                       e.preventDefault();
                       handleCreateBlog();
                     }
@@ -256,12 +232,10 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
                 />
               </div>
 
-              <div className="rounded-md border bg-muted/40 p-3">
-                <p className="text-xs font-medium text-muted-foreground">
-                  Preview
-                </p>
+              <div className="bg-muted/40 rounded-md border p-3">
+                <p className="text-muted-foreground text-xs font-medium">Preview</p>
                 <p className="mt-1 truncate font-mono text-sm">
-                  {slugPreview ? `/blog/${slugPreview}` : "/blog/..."}
+                  {slugPreview ? `/blog/${slugPreview}` : '/blog/...'}
                 </p>
               </div>
             </div>
@@ -298,7 +272,7 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
             </div>
             {blogs.length > 0 && (
               <Badge variant="outline" className="font-normal">
-                {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}
+                {blogs.length} {blogs.length === 1 ? 'blog' : 'blogs'}
               </Badge>
             )}
           </div>
@@ -345,17 +319,14 @@ export default function BlogManager({ initialBlogs }: BlogManagerProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this blog?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              blog post.
+              This action cannot be undone. This will permanently delete the blog post.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               disabled={isDeleting}
-              className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 gap-2"
               onClick={(e) => {
                 e.preventDefault();
                 if (pendingDeleteId) handleDeleteBlog(pendingDeleteId);
@@ -386,14 +357,9 @@ function SortableBlogRow({
   onToggleVisibility,
   onRequestDelete,
 }: SortableBlogRowProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: blog.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: blog.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -404,13 +370,13 @@ function SortableBlogRow({
     <li
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 rounded-lg border bg-card p-3.5 shadow-sm transition-colors hover:border-border/80 ${
-        isDragging ? "z-10 border-primary/50 bg-muted/50 shadow-md" : ""
+      className={`bg-card hover:border-border/80 flex items-center gap-3 rounded-lg border p-3.5 shadow-sm transition-colors ${
+        isDragging ? 'border-primary/50 bg-muted/50 z-10 shadow-md' : ''
       }`}
     >
       <button
         type="button"
-        className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+        className="text-muted-foreground hover:text-foreground cursor-grab touch-none active:cursor-grabbing"
         aria-label="Drag to reorder"
         {...attributes}
         {...listeners}
@@ -419,7 +385,7 @@ function SortableBlogRow({
       </button>
 
       <div className="flex min-w-0 flex-1 items-center gap-3">
-        <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
         <span className="truncate font-mono text-sm">{blog.slug}</span>
       </div>
 
@@ -428,16 +394,9 @@ function SortableBlogRow({
           #{position}
         </Badge>
 
-        <Badge
-          variant={blog.isVisible ? "default" : "secondary"}
-          className="gap-1"
-        >
-          {blog.isVisible ? (
-            <Eye className="h-3 w-3" />
-          ) : (
-            <EyeOff className="h-3 w-3" />
-          )}
-          {blog.isVisible ? "Visible" : "Hidden"}
+        <Badge variant={blog.isVisible ? 'default' : 'secondary'} className="gap-1">
+          {blog.isVisible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+          {blog.isVisible ? 'Visible' : 'Hidden'}
         </Badge>
       </div>
 
@@ -445,9 +404,7 @@ function SortableBlogRow({
         <Switch
           checked={blog.isVisible}
           disabled={isToggling}
-          onCheckedChange={(checked) =>
-            onToggleVisibility(blog.id, checked)
-          }
+          onCheckedChange={(checked) => onToggleVisibility(blog.id, checked)}
           aria-label="Toggle visibility"
         />
 
@@ -468,12 +425,12 @@ function SortableBlogRow({
 function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-14 text-center">
-      <div className="rounded-full bg-muted p-3">
-        <FileText className="h-6 w-6 text-muted-foreground" />
+      <div className="bg-muted rounded-full p-3">
+        <FileText className="text-muted-foreground h-6 w-6" />
       </div>
       <div>
         <p className="font-medium">No blogs found</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Get started by creating your first blog post.
         </p>
       </div>

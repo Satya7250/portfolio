@@ -1,42 +1,27 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useActionState } from "react";
+import * as React from 'react';
+import { useActionState } from 'react';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { login } from "@/actions/auth";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { login } from '@/actions/auth';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 
-import { Input } from "@/components/ui/input";
+import { Input } from '@/components/ui/input';
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const [state, formAction] = useActionState(login, null);
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle>Welcome back</CardTitle>
-          <CardDescription>
-            Sign in to access your admin dashboard.
-          </CardDescription>
+          <CardDescription>Sign in to access your admin dashboard.</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -66,11 +51,7 @@ export function LoginForm({
                 />
               </Field>
 
-              {state?.error && (
-                <p className="text-sm text-red-500">
-                  {state.error}
-                </p>
-              )}
+              {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
 
               <Field>
                 <Button type="submit" className="w-full">

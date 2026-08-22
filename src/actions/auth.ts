@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
-import argon2 from "argon2";
-import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import argon2 from 'argon2';
+import { redirect } from 'next/navigation';
+import { eq } from 'drizzle-orm';
 
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { createSession } from "@/lib/auth";
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { createSession } from '@/lib/auth';
 
 export type LoginState = {
   error?: string;
@@ -14,19 +14,15 @@ export type LoginState = {
 
 export async function login(
   _prevState: LoginState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<LoginState> {
-  const email = formData
-    .get("email")
-    ?.toString()
-    .trim()
-    .toLowerCase();
+  const email = formData.get('email')?.toString().trim().toLowerCase();
 
-  const password = formData.get("password")?.toString();
+  const password = formData.get('password')?.toString();
 
   if (!email || !password) {
     return {
-      error: "Email and password are required.",
+      error: 'Email and password are required.',
     };
   }
 
@@ -36,28 +32,25 @@ export async function login(
 
   if (!user) {
     return {
-      error: "Invalid credentials.",
+      error: 'Invalid credentials.',
     };
   }
 
   if (!user.isActive) {
     return {
-      error: "Account is disabled.",
+      error: 'Account is disabled.',
     };
   }
 
-  const validPassword = await argon2.verify(
-    user.passwordHash,
-    password
-  );
+  const validPassword = await argon2.verify(user.passwordHash, password);
 
   if (!validPassword) {
     return {
-      error: "Invalid credentials.",
+      error: 'Invalid credentials.',
     };
   }
 
   await createSession(user.id);
 
-  redirect("/admin/dashboard");
+  redirect('/admin/dashboard');
 }

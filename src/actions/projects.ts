@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
-import { db } from "@/db";
-import { projects } from "@/db/schema";
-import cloudinary from "@/lib/cloudinary";
+import { db } from '@/db';
+import { projects } from '@/db/schema';
+import cloudinary from '@/lib/cloudinary';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -17,23 +17,20 @@ const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
  * after the DB write succeeds.
  */
 export async function upsertProject(formData: FormData) {
-  const id = formData.get("id")?.toString().trim() || null;
-  const slug = formData.get("slug")?.toString().trim();
-  const title = formData.get("title")?.toString().trim();
-  const description = formData.get("description")?.toString().trim();
-  const tagsRaw = formData.get("tags")?.toString().trim();
-  const repoUrl = formData.get("repoUrl")?.toString().trim() || null;
-  const demoUrl = formData.get("demoUrl")?.toString().trim() || null;
-  const colorTheme = formData.get("colorTheme")?.toString().trim() || "purple";
-  const isPublished = formData.get("isPublished")?.toString() === "true";
-  const sortOrder = parseInt(
-    formData.get("sortOrder")?.toString() ?? "0",
-    10
-  );
-  const imageFile = formData.get("image");
+  const id = formData.get('id')?.toString().trim() || null;
+  const slug = formData.get('slug')?.toString().trim();
+  const title = formData.get('title')?.toString().trim();
+  const description = formData.get('description')?.toString().trim();
+  const tagsRaw = formData.get('tags')?.toString().trim();
+  const repoUrl = formData.get('repoUrl')?.toString().trim() || null;
+  const demoUrl = formData.get('demoUrl')?.toString().trim() || null;
+  const colorTheme = formData.get('colorTheme')?.toString().trim() || 'purple';
+  const isPublished = formData.get('isPublished')?.toString() === 'true';
+  const sortOrder = parseInt(formData.get('sortOrder')?.toString() ?? '0', 10);
+  const imageFile = formData.get('image');
 
   if (!slug || !title || !description) {
-    throw new Error("Slug, title, and description are required.");
+    throw new Error('Slug, title, and description are required.');
   }
 
   const tags: string[] = tagsRaw ? JSON.parse(tagsRaw) : [];
@@ -46,11 +43,11 @@ export async function upsertProject(formData: FormData) {
 
   // If a new image file was uploaded, push it to Cloudinary
   if (imageFile instanceof File && imageFile.size > 0) {
-    if (!imageFile.type.startsWith("image/")) {
-      throw new Error("Only image files are allowed.");
+    if (!imageFile.type.startsWith('image/')) {
+      throw new Error('Only image files are allowed.');
     }
     if (imageFile.size > MAX_IMAGE_SIZE) {
-      throw new Error("Image size must be less than 10MB.");
+      throw new Error('Image size must be less than 10MB.');
     }
 
     const bytes = await imageFile.arrayBuffer();
@@ -62,20 +59,20 @@ export async function upsertProject(formData: FormData) {
     }>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          folder: "portfolio/projects",
-          resource_type: "image",
+          folder: 'portfolio/projects',
+          resource_type: 'image',
           public_id: `project_${slug}_${Date.now()}`,
         },
         (error, result) => {
           if (error || !result) {
-            reject(error || new Error("Failed to upload image"));
+            reject(error || new Error('Failed to upload image'));
             return;
           }
           resolve({
             secure_url: result.secure_url,
             public_id: result.public_id,
           });
-        }
+        },
       );
 
       stream.end(buffer);
@@ -89,9 +86,7 @@ export async function upsertProject(formData: FormData) {
         where: eq(projects.id, id),
       });
       if (existing?.image) {
-        const match = existing.image.match(
-          /portfolio\/projects\/[^./]+/
-        );
+        const match = existing.image.match(/portfolio\/projects\/[^./]+/);
         if (match) previousPublicId = match[0];
       }
     }
@@ -113,7 +108,7 @@ export async function upsertProject(formData: FormData) {
         title,
         description,
         tags,
-        image: imageUrl ?? existing?.image ?? "",
+        image: imageUrl ?? existing?.image ?? '',
         repoUrl,
         demoUrl,
         colorTheme,
@@ -125,7 +120,7 @@ export async function upsertProject(formData: FormData) {
   } else {
     // INSERT — image is required for new projects
     if (!imageUrl) {
-      throw new Error("An image is required for new projects.");
+      throw new Error('An image is required for new projects.');
     }
 
     await db.insert(projects).values({
@@ -146,15 +141,15 @@ export async function upsertProject(formData: FormData) {
   if (previousPublicId) {
     try {
       await cloudinary.uploader.destroy(previousPublicId, {
-        resource_type: "image",
+        resource_type: 'image',
       });
     } catch (_) {
       // stale image left in Cloudinary — safe to ignore
     }
   }
 
-  revalidatePath("/");
-  revalidatePath("/admin/dashboard/projects");
+  revalidatePath('/');
+  revalidatePath('/admin/dashboard/projects');
 
   return { success: true };
 }
@@ -175,7 +170,7 @@ export async function deleteProject(id: string) {
     if (match) {
       try {
         await cloudinary.uploader.destroy(match[0], {
-          resource_type: "image",
+          resource_type: 'image',
         });
       } catch (_) {
         // Non-fatal
@@ -183,8 +178,8 @@ export async function deleteProject(id: string) {
     }
   }
 
-  revalidatePath("/");
-  revalidatePath("/admin/dashboard/projects");
+  revalidatePath('/');
+  revalidatePath('/admin/dashboard/projects');
 
   return { success: true };
 }

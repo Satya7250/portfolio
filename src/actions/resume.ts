@@ -1,27 +1,27 @@
-"use server";
+'use server';
 
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
-import { db } from "@/db";
-import { resume } from "@/db/schema";
-import cloudinary from "@/lib/cloudinary";
+import { db } from '@/db';
+import { resume } from '@/db/schema';
+import cloudinary from '@/lib/cloudinary';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function uploadResume(formData: FormData) {
-  const file = formData.get("file");
+  const file = formData.get('file');
 
   if (!(file instanceof File)) {
-    throw new Error("Please select a PDF file");
+    throw new Error('Please select a PDF file');
   }
 
-  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-    throw new Error("Only PDF files are allowed");
+  if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+    throw new Error('Only PDF files are allowed');
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    throw new Error("File size must be less than 10MB");
+    throw new Error('File size must be less than 10MB');
   }
 
   const existingResume = await db.query.resume.findFirst();
@@ -29,7 +29,7 @@ export async function uploadResume(formData: FormData) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
   const publicIdWithoutExt = `resume_${Date.now()}`;
 
   const uploadResult = await new Promise<{
@@ -38,15 +38,15 @@ export async function uploadResume(formData: FormData) {
   }>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: "portfolio/resume",
-        resource_type: "image",
-        format: "pdf",
+        folder: 'portfolio/resume',
+        resource_type: 'image',
+        format: 'pdf',
         public_id: publicIdWithoutExt,
-        flags: "attachment:false",
+        flags: 'attachment:false',
       },
       (error, result) => {
         if (error || !result) {
-          reject(error || new Error("Failed to upload to Cloudinary"));
+          reject(error || new Error('Failed to upload to Cloudinary'));
           return;
         }
 
@@ -54,7 +54,7 @@ export async function uploadResume(formData: FormData) {
           secure_url: result.secure_url,
           public_id: result.public_id,
         });
-      }
+      },
     );
 
     stream.end(buffer);
@@ -63,12 +63,12 @@ export async function uploadResume(formData: FormData) {
   if (existingResume) {
     try {
       await cloudinary.uploader.destroy(existingResume.publicId, {
-        resource_type: "image",
+        resource_type: 'image',
       });
     } catch (_) {}
     try {
       await cloudinary.uploader.destroy(existingResume.publicId, {
-        resource_type: "raw",
+        resource_type: 'raw',
       });
     } catch (_) {}
 
@@ -82,8 +82,8 @@ export async function uploadResume(formData: FormData) {
       })
       .where(eq(resume.id, existingResume.id));
 
-    revalidatePath("/admin/dashboard/resume");
-    revalidatePath("/");
+    revalidatePath('/admin/dashboard/resume');
+    revalidatePath('/');
 
     return {
       success: true,
@@ -97,8 +97,8 @@ export async function uploadResume(formData: FormData) {
     publicId: uploadResult.public_id,
   });
 
-  revalidatePath("/admin/dashboard/resume");
-  revalidatePath("/");
+  revalidatePath('/admin/dashboard/resume');
+  revalidatePath('/');
 
   return {
     success: true,

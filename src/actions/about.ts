@@ -1,37 +1,37 @@
-"use server";
+'use server';
 
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
-import { db } from "@/db";
-import { about } from "@/db/schema";
-import cloudinary from "@/lib/cloudinary";
+import { db } from '@/db';
+import { about } from '@/db/schema';
+import cloudinary from '@/lib/cloudinary';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function upsertAbout(formData: FormData) {
-  const imageAlt = formData.get("imageAlt")?.toString().trim();
-  const intro = formData.get("intro")?.toString().trim();
-  const name = formData.get("name")?.toString().trim();
-  const role = formData.get("role")?.toString().trim();
-  const bio = formData.get("bio")?.toString().trim();
-  const imageFile = formData.get("image");
+  const imageAlt = formData.get('imageAlt')?.toString().trim();
+  const intro = formData.get('intro')?.toString().trim();
+  const name = formData.get('name')?.toString().trim();
+  const role = formData.get('role')?.toString().trim();
+  const bio = formData.get('bio')?.toString().trim();
+  const imageFile = formData.get('image');
 
   if (!imageAlt || !intro || !name || !role || !bio) {
-    throw new Error("All fields are required.");
+    throw new Error('All fields are required.');
   }
 
   const existingAbout = await db.query.about.findFirst();
 
-  let imageSrc = existingAbout?.imageSrc ?? "";
+  let imageSrc = existingAbout?.imageSrc ?? '';
   let previousPublicId: string | null = null;
 
   if (imageFile instanceof File && imageFile.size > 0) {
-    if (!imageFile.type.startsWith("image/")) {
-      throw new Error("Only image files are allowed.");
+    if (!imageFile.type.startsWith('image/')) {
+      throw new Error('Only image files are allowed.');
     }
     if (imageFile.size > MAX_IMAGE_SIZE) {
-      throw new Error("Image size must be less than 10MB.");
+      throw new Error('Image size must be less than 10MB.');
     }
 
     const bytes = await imageFile.arrayBuffer();
@@ -43,20 +43,20 @@ export async function upsertAbout(formData: FormData) {
     }>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          folder: "portfolio/about",
-          resource_type: "image",
+          folder: 'portfolio/about',
+          resource_type: 'image',
           public_id: `about_${Date.now()}`,
         },
         (error, result) => {
           if (error || !result) {
-            reject(error || new Error("Failed to upload image"));
+            reject(error || new Error('Failed to upload image'));
             return;
           }
           resolve({
             secure_url: result.secure_url,
             public_id: result.public_id,
           });
-        }
+        },
       );
 
       stream.end(buffer);
@@ -64,9 +64,7 @@ export async function upsertAbout(formData: FormData) {
 
     // Track old image so we can delete it after a successful DB write
     if (existingAbout?.imageSrc) {
-      const match = existingAbout.imageSrc.match(
-        /portfolio\/about\/[^./]+/
-      );
+      const match = existingAbout.imageSrc.match(/portfolio\/about\/[^./]+/);
       if (match) previousPublicId = match[0];
     }
 
@@ -74,7 +72,7 @@ export async function upsertAbout(formData: FormData) {
   }
 
   if (!imageSrc) {
-    throw new Error("Please upload an image.");
+    throw new Error('Please upload an image.');
   }
 
   const values = {
@@ -96,15 +94,15 @@ export async function upsertAbout(formData: FormData) {
   if (previousPublicId) {
     try {
       await cloudinary.uploader.destroy(previousPublicId, {
-        resource_type: "image",
+        resource_type: 'image',
       });
     } catch (_) {
       // Non-fatal: stale image left in Cloudinary, safe to ignore
     }
   }
 
-  revalidatePath("/dashboard/about");
-  revalidatePath("/");
+  revalidatePath('/dashboard/about');
+  revalidatePath('/');
 
   return { success: true, imageSrc };
 }

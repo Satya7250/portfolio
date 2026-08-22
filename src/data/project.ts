@@ -1,6 +1,6 @@
-import { db } from "@/db";
-import { projects } from "@/db/schema";
-import { asc, eq } from "drizzle-orm";
+import { db } from '@/db';
+import { projects } from '@/db/schema';
+import { asc, eq } from 'drizzle-orm';
 
 export async function getProjects() {
   return await db
@@ -11,10 +11,7 @@ export async function getProjects() {
 }
 
 export async function getAllProjects() {
-  return await db
-    .select()
-    .from(projects)
-    .orderBy(asc(projects.sortOrder));
+  return await db.select().from(projects).orderBy(asc(projects.sortOrder));
 }
 
 export async function getProjectById(id: string) {

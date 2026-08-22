@@ -1,13 +1,13 @@
-import { getAllCertifications } from "@/data/certificate";
-import { getHeading } from "@/lib/section-headings";
+import { getAllCertifications } from '@/data/certificate';
+import { getHeading } from '@/lib/section-headings';
 
-import CertificationManager from "@/components/admin/certificates/certificate-manager";
-import { SectionHeadingEditor } from "@/components/admin/section-heading/section-heading-editor";
+import CertificationManager from '@/components/admin/certificates/certificate-manager';
+import { SectionHeadingEditor } from '@/components/admin/section-heading/section-heading-editor';
 
 export default async function CertificationDashboardPage() {
   const certifications = await getAllCertifications();
 
-  const heading = await getHeading("certifications");
+  const heading = await getHeading('certifications');
 
   return (
     <div className="space-y-8 p-6">
@@ -19,9 +19,7 @@ export default async function CertificationDashboardPage() {
         />
       </div>
 
-      <CertificationManager
-        initialCertifications={certifications}
-      />
+      <CertificationManager initialCertifications={certifications} />
     </div>
   );
 }

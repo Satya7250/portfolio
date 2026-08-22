@@ -11,10 +11,7 @@ interface ProjectPreviewProps {
 }
 
 export function ProjectPreview({ project }: ProjectPreviewProps) {
-  const gradient =
-    project.gradient ??
-    PROJECT_THEMES[project.colorTheme] ??
-    PROJECT_THEMES.purple;
+  const gradient = project.gradient ?? PROJECT_THEMES[project.colorTheme] ?? PROJECT_THEMES.purple;
 
   return (
     <motion.div
@@ -32,7 +29,7 @@ export function ProjectPreview({ project }: ProjectPreviewProps) {
           gradient.from,
           gradient.via,
           gradient.to,
-          gradient.border
+          gradient.border,
         )}
       >
         <div className="relative aspect-16/10 overflow-hidden rounded-2xl">

@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import {
-  FileText,
-  UploadCloud,
-  X,
-  Loader2,
-  FileUp,
-} from "lucide-react";
-import { toast } from "sonner";
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { FileText, UploadCloud, X, Loader2, FileUp } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { uploadResume } from "@/actions/resume";
-import { Button } from "@/components/ui/button";
+import { uploadResume } from '@/actions/resume';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -20,7 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -39,15 +33,13 @@ export function ResumeManager() {
   };
 
   const validateAndSetFile = (file: File) => {
-    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-      toast.error("Invalid file format. Only PDF files are allowed.");
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      toast.error('Invalid file format. Only PDF files are allowed.');
       return false;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      toast.error(
-        `File size exceeds 10MB limit (${formatFileSize(file.size)}).`
-      );
+      toast.error(`File size exceeds 10MB limit (${formatFileSize(file.size)}).`);
       return false;
     }
 
@@ -88,51 +80,50 @@ export function ResumeManager() {
   const clearSelectedFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      toast.error("Please select a PDF file first.");
+      toast.error('Please select a PDF file first.');
       return;
     }
 
     try {
       setIsUploading(true);
       const formData = new FormData();
-      formData.append("file", selectedFile);
+      formData.append('file', selectedFile);
 
       const result = await uploadResume(formData);
 
       if (result?.success) {
-        toast.success("Resume uploaded successfully!");
+        toast.success('Resume uploaded successfully!');
         clearSelectedFile();
         router.refresh();
       } else {
-        toast.error("Failed to upload resume. Please try again.");
+        toast.error('Failed to upload resume. Please try again.');
       }
     } catch (error: any) {
-      console.error("Upload error:", error);
-      toast.error(
-        error?.message || "An unexpected error occurred while uploading."
-      );
+      console.error('Upload error:', error);
+      toast.error(error?.message || 'An unexpected error occurred while uploading.');
     } finally {
       setIsUploading(false);
     }
   };
 
   return (
-    <div className="mx-auto max-w-2xl w-full">
+    <div className="mx-auto w-full max-w-2xl">
       <Card className="flex flex-col justify-between border shadow-sm">
         <div>
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <UploadCloud className="size-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+              <UploadCloud className="text-primary size-5" />
               Upload Resume
             </CardTitle>
             <CardDescription>
-              Select or drop a PDF file to update your portfolio resume. Maximum file size allowed is 10MB.
+              Select or drop a PDF file to update your portfolio resume. Maximum file size allowed
+              is 10MB.
             </CardDescription>
           </CardHeader>
 
@@ -152,34 +143,32 @@ export function ResumeManager() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`group flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 text-center cursor-pointer transition-colors ${
+                className={`group flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 text-center transition-colors ${
                   isDragging
-                    ? "border-primary bg-primary/5"
-                    : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/40"
+                    ? 'border-primary bg-primary/5'
+                    : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/40'
                 }`}
               >
-                <div className="p-3 rounded-full bg-muted group-hover:bg-primary/10 text-muted-foreground group-hover:text-primary transition-colors mb-3">
+                <div className="bg-muted group-hover:bg-primary/10 text-muted-foreground group-hover:text-primary mb-3 rounded-full p-3 transition-colors">
                   <FileUp className="size-6" />
                 </div>
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-foreground text-sm font-medium">
                   Click to select or drag and drop PDF file
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  PDF format only (Max 10MB)
-                </p>
+                <p className="text-muted-foreground mt-1 text-xs">PDF format only (Max 10MB)</p>
               </div>
             ) : (
-              <div className="rounded-xl border bg-muted/40 p-4 space-y-3">
+              <div className="bg-muted/40 space-y-3 rounded-xl border p-4">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="bg-primary/10 text-primary shrink-0 rounded-lg p-2.5">
                       <FileText className="size-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate" title={selectedFile.name}>
+                      <p className="truncate text-sm font-medium" title={selectedFile.name}>
                         {selectedFile.name}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         {formatFileSize(selectedFile.size)}
                       </p>
                     </div>
@@ -189,7 +178,7 @@ export function ResumeManager() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="size-8 text-muted-foreground hover:text-destructive shrink-0 cursor-pointer"
+                    className="text-muted-foreground hover:text-destructive size-8 shrink-0 cursor-pointer"
                     onClick={clearSelectedFile}
                     disabled={isUploading}
                     title="Remove selected file"
@@ -202,10 +191,10 @@ export function ResumeManager() {
           </CardContent>
         </div>
 
-        <CardFooter className="pt-2 border-t">
+        <CardFooter className="border-t pt-2">
           <Button
             type="button"
-            className="w-full gap-2 cursor-pointer"
+            className="w-full cursor-pointer gap-2"
             onClick={handleUpload}
             disabled={!selectedFile || isUploading}
           >

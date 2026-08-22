@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, Save } from "lucide-react";
-import { toast } from "sonner";
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { Loader2, Save } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { upsertSectionHeading } from "@/actions/section-heading";
-import { Button } from "@/components/ui/button";
+import { upsertSectionHeading } from '@/actions/section-heading';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,10 +14,10 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 type HeadingData = {
   eyebrow: string;
@@ -28,7 +28,7 @@ type HeadingData = {
 export function SectionHeadingEditor({
   section,
   heading,
-  label = "Section Heading",
+  label = 'Section Heading',
 }: {
   section: string;
   heading: HeadingData;
@@ -39,30 +39,29 @@ export function SectionHeadingEditor({
   const [isSaving, setIsSaving] = React.useState(false);
 
   const updateField =
-    (key: keyof HeadingData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (key: keyof HeadingData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [key]: e.target.value }));
     };
 
   const handleSubmit = async () => {
     if (!form.eyebrow.trim() || !form.title.trim() || !form.description.trim()) {
-      toast.error("Please fill in all fields.");
+      toast.error('Please fill in all fields.');
       return;
     }
 
     try {
       setIsSaving(true);
       const formData = new FormData();
-      formData.append("section", section);
-      formData.append("eyebrow", form.eyebrow.trim());
-      formData.append("title", form.title.trim());
-      formData.append("description", form.description.trim());
+      formData.append('section', section);
+      formData.append('eyebrow', form.eyebrow.trim());
+      formData.append('title', form.title.trim());
+      formData.append('description', form.description.trim());
 
       await upsertSectionHeading(formData);
-      toast.success("Heading updated.");
+      toast.success('Heading updated.');
       router.refresh();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to save.");
+      toast.error(error?.message || 'Failed to save.');
     } finally {
       setIsSaving(false);
     }
@@ -83,7 +82,7 @@ export function SectionHeadingEditor({
           <Input
             id={`${section}-eyebrow`}
             value={form.eyebrow}
-            onChange={updateField("eyebrow")}
+            onChange={updateField('eyebrow')}
             disabled={isSaving}
           />
         </div>
@@ -93,7 +92,7 @@ export function SectionHeadingEditor({
           <Input
             id={`${section}-title`}
             value={form.title}
-            onChange={updateField("title")}
+            onChange={updateField('title')}
             disabled={isSaving}
           />
         </div>
@@ -103,14 +102,14 @@ export function SectionHeadingEditor({
           <Textarea
             id={`${section}-description`}
             value={form.description}
-            onChange={updateField("description")}
+            onChange={updateField('description')}
             rows={2}
             disabled={isSaving}
           />
         </div>
       </CardContent>
 
-      <CardFooter className="pt-2 border-t">
+      <CardFooter className="border-t pt-2">
         <Button type="button" className="gap-2" onClick={handleSubmit} disabled={isSaving}>
           {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
           Save Heading

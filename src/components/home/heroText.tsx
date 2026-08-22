@@ -46,7 +46,7 @@ export default function HeroText({ profile }: HeroTextProps) {
       {hasResume ? (
         <Button
           asChild
-          className="group relative inline-flex h-auto items-center gap-3 overflow-hidden rounded-full border border-emerald-500/20 bg-emerald-500/5 px-7 py-3.5 text-sm font-semibold text-emerald-600 backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:shadow-[0_12px_40px_-12px_rgba(16,185,129,0.5)] dark:text-emerald-400 cursor-pointer"
+          className="group relative inline-flex h-auto cursor-pointer items-center gap-3 overflow-hidden rounded-full border border-emerald-500/20 bg-emerald-500/5 px-7 py-3.5 text-sm font-semibold text-emerald-600 backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:shadow-[0_12px_40px_-12px_rgba(16,185,129,0.5)] dark:text-emerald-400"
         >
           <motion.a
             href={profile.resumeUrl!}
@@ -98,9 +98,9 @@ export default function HeroText({ profile }: HeroTextProps) {
         <Button
           disabled
           variant="outline"
-          className="relative inline-flex h-auto items-center gap-3 rounded-full border border-muted px-7 py-3.5 text-sm font-semibold text-muted-foreground opacity-60 cursor-not-allowed"
+          className="border-muted text-muted-foreground relative inline-flex h-auto cursor-not-allowed items-center gap-3 rounded-full border px-7 py-3.5 text-sm font-semibold opacity-60"
         >
-          <FileText className="h-4 w-4 text-muted-foreground" />
+          <FileText className="text-muted-foreground h-4 w-4" />
           <span>Resume Unavailable</span>
         </Button>
       )}

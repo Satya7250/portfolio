@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,28 +9,28 @@ cloudinary.config({
 export default cloudinary;
 
 export function getCloudinaryPublicId(imageUrl: string | null | undefined) {
-  if (!imageUrl?.includes("res.cloudinary.com")) return null;
+  if (!imageUrl?.includes('res.cloudinary.com')) return null;
 
   const path = decodeURIComponent(new URL(imageUrl).pathname);
-  const uploadMarker = "/upload/";
+  const uploadMarker = '/upload/';
   const uploadIndex = path.indexOf(uploadMarker);
   if (uploadIndex === -1) return null;
 
   const assetPath = path.slice(uploadIndex + uploadMarker.length);
-  const withoutVersion = assetPath.replace(/^v\d+\//, "");
-  return withoutVersion.replace(/\.[^/.]+$/, "") || null;
+  const withoutVersion = assetPath.replace(/^v\d+\//, '');
+  return withoutVersion.replace(/\.[^/.]+$/, '') || null;
 }
 
 export async function removeCloudinaryImage(publicId: string | null) {
-  if (!publicId || !publicId.startsWith("portfolio/certificates/")) return;
+  if (!publicId || !publicId.startsWith('portfolio/certificates/')) return;
 
   const result = await cloudinary.uploader.destroy(publicId, {
-    resource_type: "image",
+    resource_type: 'image',
   });
 
-  if (result.result === "not found") {
+  if (result.result === 'not found') {
     await cloudinary.uploader.destroy(publicId, {
-      resource_type: "raw",
+      resource_type: 'raw',
     });
   }
 }

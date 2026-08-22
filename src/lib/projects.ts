@@ -1,47 +1,40 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq } from 'drizzle-orm';
 
-import { db } from "@/db";
-import { projects as projectsTable } from "@/db/schema";
-import type { Project } from "@/types/project";
+import { db } from '@/db';
+import { projects as projectsTable } from '@/db/schema';
+import type { Project } from '@/types/project';
 
 const fallbackProjects: Project[] = [
   {
-    id: "topdo",
-    slug: "topdo",
-    title: "TopDo",
+    id: 'topdo',
+    slug: 'topdo',
+    title: 'TopDo',
     description:
-      "A modern productivity platform for organizing tasks, managing projects, and staying productive with real-time collaboration.",
-    tags: [
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Drizzle ORM",
-      "PostgreSQL",
-      "Clerk",
-    ],
-    image: "/images/topdo.png",
-    repoUrl: "https://github.com/Satya7250/Todo-List",
-    demoUrl: "https://topdo.in",
-    colorTheme: "purple",
+      'A modern productivity platform for organizing tasks, managing projects, and staying productive with real-time collaboration.',
+    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Drizzle ORM', 'PostgreSQL', 'Clerk'],
+    image: '/images/topdo.png',
+    repoUrl: 'https://github.com/Satya7250/Todo-List',
+    demoUrl: 'https://topdo.in',
+    colorTheme: 'purple',
   },
   {
-    id: "briefly-ai",
-    slug: "briefly-ai",
-    title: "Briefly AI",
+    id: 'briefly-ai',
+    slug: 'briefly-ai',
+    title: 'Briefly AI',
     description:
-      "An AI productivity assistant that automates Gmail and Google Calendar, prioritizing emails, scheduling tasks, and organizing your day.",
+      'An AI productivity assistant that automates Gmail and Google Calendar, prioritizing emails, scheduling tasks, and organizing your day.',
     tags: [
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Google Gmail API",
-      "Google Calendar API",
-      "OpenAI",
+      'Next.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'Google Gmail API',
+      'Google Calendar API',
+      'OpenAI',
     ],
-    image: "/images/briefly.png",
-    repoUrl: "https://github.com/Satya7250/Briefly-AI",
-    demoUrl: "https://briiefly-ai.vercel.app/",
-    colorTheme: "amber",
+    image: '/images/briefly.png',
+    repoUrl: 'https://github.com/Satya7250/Briefly-AI',
+    demoUrl: 'https://briiefly-ai.vercel.app/',
+    colorTheme: 'amber',
   },
 ];
 

@@ -7,11 +7,11 @@ import TechStackSection from '@/components/home/stack/techStackSection';
 import BlogsSection from '@/components/home/blogs/blogs-section';
 import ContactSection from '@/components/home/contact/contact';
 import { getProfile } from '@/lib/resume';
-import { getAboutSection } from "@/lib/about";
+import { getAboutSection } from '@/lib/about';
 import { ProjectsSection } from '@/components/home/projects/projects-section';
 import { CertificationsSection } from '@/components/home/certificate/certificate-section';
 import { getPublishedCertifications } from '@/data/certificate';
-import { getTechStackSection } from "@/lib/tech-stack";
+import { getTechStackSection } from '@/lib/tech-stack';
 import { getHeading } from '@/lib/section-headings';
 
 export default async function Home() {
@@ -31,12 +31,12 @@ export default async function Home() {
     getAboutSection(),
     getTechStackSection(),
     getPublishedCertifications(),
-    getHeading("about"),
-    getHeading("stack"),
-    getHeading("projects"),
-    getHeading("blogs"),
-    getHeading("certifications"),
-    getHeading("contact"),
+    getHeading('about'),
+    getHeading('stack'),
+    getHeading('projects'),
+    getHeading('blogs'),
+    getHeading('certifications'),
+    getHeading('contact'),
   ]);
 
   return (
@@ -63,11 +63,7 @@ export default async function Home() {
       </section>
 
       {/* About */}
-      <section
-        id="about"
-        aria-labelledby="about-heading"
-        className="px-6 py-24"
-      >
+      <section id="about" aria-labelledby="about-heading" className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow={aboutHeading.eyebrow}

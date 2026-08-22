@@ -1,13 +1,13 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import { getCurrentUser } from "@/lib/auth";
-import { LoginForm } from "@/components/admin/login-form";
+import { getCurrentUser } from '@/lib/auth';
+import { LoginForm } from '@/components/admin/login-form';
 
 export default async function LoginPage() {
   const user = await getCurrentUser();
 
   if (user) {
-    redirect("/admin/dashboard");
+    redirect('/admin/dashboard');
   }
 
   return (

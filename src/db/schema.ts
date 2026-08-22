@@ -1,61 +1,45 @@
-import {
-  boolean,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  integer,
-} from "drizzle-orm/pg-core";
-
+import { boolean, pgTable, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
 
 // Stores admin authentication credentials for portfolio dashboard access.
-export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  email: text("email")
-    .notNull()
-    .unique(),
+  email: text('email').notNull().unique(),
 
-  passwordHash: text("password_hash")
-    .notNull(),
+  passwordHash: text('password_hash').notNull(),
 
-  isActive: boolean("is_active")
-    .default(true)
-    .notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
 
-  createdAt: timestamp("created_at", {
+  createdAt: timestamp('created_at', {
     withTimezone: true,
   })
     .defaultNow()
     .notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
     .notNull(),
 });
 
-
 // Stores active admin sessions.
-export const sessions = pgTable("sessions", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const sessions = pgTable('sessions', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  userId: uuid("user_id")
+  userId: uuid('user_id')
     .notNull()
     .references(() => users.id, {
-      onDelete: "cascade",
+      onDelete: 'cascade',
     }),
 
-  token: text("token")
-    .notNull()
-    .unique(),
+  token: text('token').notNull().unique(),
 
-  expiresAt: timestamp("expires_at", {
+  expiresAt: timestamp('expires_at', {
     withTimezone: true,
   }).notNull(),
 
-  createdAt: timestamp("created_at", {
+  createdAt: timestamp('created_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -63,45 +47,40 @@ export const sessions = pgTable("sessions", {
 });
 
 //resume
-export const resume = pgTable("resume", {
-  id: uuid("id")
-    .defaultRandom()
-    .primaryKey(),
+export const resume = pgTable('resume', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  fileName: text("file_name").notNull(),
+  fileName: text('file_name').notNull(),
 
-  fileUrl: text("file_url").notNull(),
+  fileUrl: text('file_url').notNull(),
 
-  publicId: text("public_id").notNull(),
+  publicId: text('public_id').notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
     .notNull(),
 });
 
-
 // About
-export const about = pgTable("about", {
-  id: uuid("id")
-    .defaultRandom()
-    .primaryKey(),
-    
+export const about = pgTable('about', {
+  id: uuid('id').defaultRandom().primaryKey(),
+
   // AboutMe component
-  imageSrc: text("image_src").notNull(),
+  imageSrc: text('image_src').notNull(),
 
-  imageAlt: text("image_alt").notNull(),
+  imageAlt: text('image_alt').notNull(),
 
-  intro: text("intro").notNull(),
+  intro: text('intro').notNull(),
 
-  name: text("name").notNull(),
+  name: text('name').notNull(),
 
-  role: text("role").notNull(),
+  role: text('role').notNull(),
 
-  bio: text("bio").notNull(),
+  bio: text('bio').notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -109,26 +88,22 @@ export const about = pgTable("about", {
 });
 
 // Tech Stack
-export const techStack = pgTable("tech_stack", {
-  id: uuid("id")
-    .defaultRandom()
-    .primaryKey(),
+export const techStack = pgTable('tech_stack', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  name: text("name").notNull(),
+  name: text('name').notNull(),
 
   // react, nextjs, nodejs, postgresql, etc.
-  icon: text("icon").notNull(),
+  icon: text('icon').notNull(),
 
   // Frontend, Backend, Database, etc.
-  category: text("category").notNull(),
+  category: text('category').notNull(),
 
-  brandColor: text("brand_color"),
+  brandColor: text('brand_color'),
 
-  sortOrder: integer("sort_order")
-    .default(0)
-    .notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -136,22 +111,18 @@ export const techStack = pgTable("tech_stack", {
 });
 
 //section heading
-export const sectionHeadings = pgTable("section_headings", {
-  id: uuid("id")
-    .defaultRandom()
-    .primaryKey(),
+export const sectionHeadings = pgTable('section_headings', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  section: text("section")
-    .notNull()
-    .unique(),
+  section: text('section').notNull().unique(),
 
-  eyebrow: text("eyebrow").notNull(),
+  eyebrow: text('eyebrow').notNull(),
 
-  title: text("title").notNull(),
+  title: text('title').notNull(),
 
-  description: text("description").notNull(),
+  description: text('description').notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -159,40 +130,34 @@ export const sectionHeadings = pgTable("section_headings", {
 });
 
 //project
-export const projects = pgTable("projects", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const projects = pgTable('projects', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  slug: text("slug").unique().notNull(),
+  slug: text('slug').unique().notNull(),
 
-  title: text("title").notNull(),
+  title: text('title').notNull(),
 
-  description: text("description").notNull(),
+  description: text('description').notNull(),
 
-  tags: text("tags").array().notNull(),
+  tags: text('tags').array().notNull(),
 
-  image: text("image").notNull(),
+  image: text('image').notNull(),
 
-  repoUrl: text("repo_url"),
+  repoUrl: text('repo_url'),
 
-  demoUrl: text("demo_url"),
+  demoUrl: text('demo_url'),
 
-  colorTheme: text("color_theme")
-    .default("purple")
-    .notNull(),
+  colorTheme: text('color_theme').default('purple').notNull(),
 
-  sortOrder: integer("sort_order")
-    .default(0)
-    .notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 
-  isPublished: boolean("is_published")
-    .default(true)
-    .notNull(),
+  isPublished: boolean('is_published').default(true).notNull(),
 
-  createdAt: timestamp("created_at", {
+  createdAt: timestamp('created_at', {
     withTimezone: true,
   }).defaultNow(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -200,22 +165,16 @@ export const projects = pgTable("projects", {
 });
 
 // blog
-export const blogs = pgTable("blogs", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const blogs = pgTable('blogs', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  slug: text("slug")
-    .notNull()
-    .unique(),
+  slug: text('slug').notNull().unique(),
 
-  isVisible: boolean("is_visible")
-    .default(true)
-    .notNull(),
+  isVisible: boolean('is_visible').default(true).notNull(),
 
-  sortOrder: integer("sort_order")
-    .default(0)
-    .notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 
-  updatedAt: timestamp("updated_at", {
+  updatedAt: timestamp('updated_at', {
     withTimezone: true,
   })
     .defaultNow()
@@ -223,49 +182,40 @@ export const blogs = pgTable("blogs", {
 });
 
 // certificate
-export const certifications = pgTable("certifications", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const certifications = pgTable('certifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  title: text("title").notNull(),
+  title: text('title').notNull(),
 
-  issuer: text("issuer").notNull(),
+  issuer: text('issuer').notNull(),
 
-  issueDate: text("issue_date"),
+  issueDate: text('issue_date'),
 
-  certificateImage: text("certificate_image").notNull(),
+  certificateImage: text('certificate_image').notNull(),
 
-  verifyUrl: text("verify_url"),
+  verifyUrl: text('verify_url'),
 
-  isPublished: boolean("is_published")
-    .default(true)
-    .notNull(),
+  isPublished: boolean('is_published').default(true).notNull(),
 
-  sortOrder: integer("sort_order")
-    .default(0)
-    .notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
 });
 
-
 //contact
-export const contactInfo = pgTable("contact_info", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const contactInfo = pgTable('contact_info', {
+  id: uuid('id').defaultRandom().primaryKey(),
 
-  email: text("email").notNull(),
+  email: text('email').notNull(),
 
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),

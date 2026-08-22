@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import * as React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   Loader2,
   Save,
@@ -14,25 +14,19 @@ import {
   ArrowDown,
   GripVertical,
   ExternalLink,
-} from "lucide-react";
-import { FaGithub } from "react-icons/fa";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { FaGithub } from 'react-icons/fa';
+import { toast } from 'sonner';
 
-import { upsertProject, deleteProject } from "@/actions/projects";
-import { PROJECT_THEMES } from "@/lib/project-theme";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
+import { upsertProject, deleteProject } from '@/actions/projects';
+import { PROJECT_THEMES } from '@/lib/project-theme';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -40,14 +34,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,7 +51,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const THEME_KEYS = Object.keys(PROJECT_THEMES);
@@ -91,13 +85,13 @@ type FormState = {
 
 const EMPTY_FORM: FormState = {
   id: null,
-  slug: "",
-  title: "",
-  description: "",
-  tags: "",
-  repoUrl: "",
-  demoUrl: "",
-  colorTheme: THEME_KEYS[0] ?? "purple",
+  slug: '',
+  title: '',
+  description: '',
+  tags: '',
+  repoUrl: '',
+  demoUrl: '',
+  colorTheme: THEME_KEYS[0] ?? 'purple',
   isPublished: true,
 };
 
@@ -105,8 +99,8 @@ function slugify(value: string) {
   return value
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
@@ -114,7 +108,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [items, setItems] = React.useState<ProjectRow[]>(
-    [...projects].sort((a, b) => a.sortOrder - b.sortOrder)
+    [...projects].sort((a, b) => a.sortOrder - b.sortOrder),
   );
 
   React.useEffect(() => {
@@ -122,9 +116,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
   }, [projects]);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [deleteTarget, setDeleteTarget] = React.useState<ProjectRow | null>(
-    null
-  );
+  const [deleteTarget, setDeleteTarget] = React.useState<ProjectRow | null>(null);
   const [isSaving, setIsSaving] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [slugTouched, setSlugTouched] = React.useState(false);
@@ -149,9 +141,9 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
       slug: project.slug,
       title: project.title,
       description: project.description,
-      tags: project.tags.join(", "),
-      repoUrl: project.repoUrl ?? "",
-      demoUrl: project.demoUrl ?? "",
+      tags: project.tags.join(', '),
+      repoUrl: project.repoUrl ?? '',
+      demoUrl: project.demoUrl ?? '',
       colorTheme: project.colorTheme,
       isPublished: project.isPublished,
     });
@@ -162,8 +154,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
   };
 
   const updateField =
-    (key: keyof FormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [key]: e.target.value }));
     };
 
@@ -180,13 +171,13 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file.");
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file.');
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
-      toast.error("Image size exceeds 10MB limit.");
+      toast.error('Image size exceeds 10MB limit.');
       return;
     }
 
@@ -196,20 +187,18 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
 
   const handleSubmit = async () => {
     if (!form.title.trim() || !form.slug.trim() || !form.description.trim()) {
-      toast.error("Title, slug, and description are required.");
+      toast.error('Title, slug, and description are required.');
       return;
     }
 
     if (!previewUrl && !imageFile) {
-      toast.error("Please upload a project image.");
+      toast.error('Please upload a project image.');
       return;
     }
 
-    const duplicateSlug = items.some(
-      (p) => p.slug === form.slug.trim() && p.id !== form.id
-    );
+    const duplicateSlug = items.some((p) => p.slug === form.slug.trim() && p.id !== form.id);
     if (duplicateSlug) {
-      toast.error("A project with this slug already exists.");
+      toast.error('A project with this slug already exists.');
       return;
     }
 
@@ -217,48 +206,48 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
       setIsSaving(true);
       const formData = new FormData();
 
-      if (form.id) formData.append("id", form.id);
-      formData.append("slug", form.slug.trim());
-      formData.append("title", form.title.trim());
-      formData.append("description", form.description.trim());
+      if (form.id) formData.append('id', form.id);
+      formData.append('slug', form.slug.trim());
+      formData.append('title', form.title.trim());
+      formData.append('description', form.description.trim());
       formData.append(
-        "tags",
+        'tags',
         JSON.stringify(
           form.tags
-            .split(",")
+            .split(',')
             .map((t) => t.trim())
-            .filter(Boolean)
-        )
+            .filter(Boolean),
+        ),
       );
-      formData.append("repoUrl", form.repoUrl.trim());
-      formData.append("demoUrl", form.demoUrl.trim());
-      formData.append("colorTheme", form.colorTheme);
-      formData.append("isPublished", String(form.isPublished));
+      formData.append('repoUrl', form.repoUrl.trim());
+      formData.append('demoUrl', form.demoUrl.trim());
+      formData.append('colorTheme', form.colorTheme);
+      formData.append('isPublished', String(form.isPublished));
       formData.append(
-        "sortOrder",
+        'sortOrder',
         String(
           isEditing
-            ? items.find((p) => p.id === form.id)?.sortOrder ?? items.length
-            : items.length
-        )
+            ? (items.find((p) => p.id === form.id)?.sortOrder ?? items.length)
+            : items.length,
+        ),
       );
 
       if (imageFile) {
-        formData.append("image", imageFile);
+        formData.append('image', imageFile);
       }
 
       const result = await upsertProject(formData);
 
       if (result?.success) {
-        toast.success(isEditing ? "Project updated." : "Project created.");
+        toast.success(isEditing ? 'Project updated.' : 'Project created.');
         setDialogOpen(false);
         router.refresh();
       } else {
-        toast.error("Failed to save project. Please try again.");
+        toast.error('Failed to save project. Please try again.');
       }
     } catch (error: any) {
-      console.error("Project save error:", error);
-      toast.error(error?.message || "An unexpected error occurred.");
+      console.error('Project save error:', error);
+      toast.error(error?.message || 'An unexpected error occurred.');
     } finally {
       setIsSaving(false);
     }
@@ -272,16 +261,16 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
       const result = await deleteProject(deleteTarget.id);
 
       if (result?.success) {
-        toast.success("Project deleted.");
+        toast.success('Project deleted.');
         setItems((prev) => prev.filter((p) => p.id !== deleteTarget.id));
         setDeleteTarget(null);
         router.refresh();
       } else {
-        toast.error("Failed to delete project. Please try again.");
+        toast.error('Failed to delete project. Please try again.');
       }
     } catch (error: any) {
-      console.error("Project delete error:", error);
-      toast.error(error?.message || "An unexpected error occurred.");
+      console.error('Project delete error:', error);
+      toast.error(error?.message || 'An unexpected error occurred.');
     } finally {
       setIsDeleting(false);
     }
@@ -291,23 +280,21 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
     const nextValue = !project.isPublished;
 
     setItems((prev) =>
-      prev.map((p) =>
-        p.id === project.id ? { ...p, isPublished: nextValue } : p
-      )
+      prev.map((p) => (p.id === project.id ? { ...p, isPublished: nextValue } : p)),
     );
 
     try {
       const formData = new FormData();
-      formData.append("id", project.id);
-      formData.append("slug", project.slug);
-      formData.append("title", project.title);
-      formData.append("description", project.description);
-      formData.append("tags", JSON.stringify(project.tags));
-      formData.append("repoUrl", project.repoUrl ?? "");
-      formData.append("demoUrl", project.demoUrl ?? "");
-      formData.append("colorTheme", project.colorTheme);
-      formData.append("isPublished", String(nextValue));
-      formData.append("sortOrder", String(project.sortOrder));
+      formData.append('id', project.id);
+      formData.append('slug', project.slug);
+      formData.append('title', project.title);
+      formData.append('description', project.description);
+      formData.append('tags', JSON.stringify(project.tags));
+      formData.append('repoUrl', project.repoUrl ?? '');
+      formData.append('demoUrl', project.demoUrl ?? '');
+      formData.append('colorTheme', project.colorTheme);
+      formData.append('isPublished', String(nextValue));
+      formData.append('sortOrder', String(project.sortOrder));
 
       const result = await upsertProject(formData);
       if (!result?.success) throw new Error();
@@ -315,24 +302,19 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
     } catch {
       // revert on failure
       setItems((prev) =>
-        prev.map((p) =>
-          p.id === project.id ? { ...p, isPublished: project.isPublished } : p
-        )
+        prev.map((p) => (p.id === project.id ? { ...p, isPublished: project.isPublished } : p)),
       );
-      toast.error("Failed to update visibility.");
+      toast.error('Failed to update visibility.');
     }
   };
 
-  const handleReorder = async (project: ProjectRow, direction: "up" | "down") => {
+  const handleReorder = async (project: ProjectRow, direction: 'up' | 'down') => {
     const index = items.findIndex((p) => p.id === project.id);
-    const swapIndex = direction === "up" ? index - 1 : index + 1;
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
     if (swapIndex < 0 || swapIndex >= items.length) return;
 
     const reordered = [...items];
-    [reordered[index], reordered[swapIndex]] = [
-      reordered[swapIndex],
-      reordered[index],
-    ];
+    [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
     const withSortOrder = reordered.map((p, i) => ({ ...p, sortOrder: i }));
     setItems(withSortOrder);
 
@@ -340,32 +322,32 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
       await Promise.all(
         withSortOrder.map((p) => {
           const formData = new FormData();
-          formData.append("id", p.id);
-          formData.append("slug", p.slug);
-          formData.append("title", p.title);
-          formData.append("description", p.description);
-          formData.append("tags", JSON.stringify(p.tags));
-          formData.append("repoUrl", p.repoUrl ?? "");
-          formData.append("demoUrl", p.demoUrl ?? "");
-          formData.append("colorTheme", p.colorTheme);
-          formData.append("isPublished", String(p.isPublished));
-          formData.append("sortOrder", String(p.sortOrder));
+          formData.append('id', p.id);
+          formData.append('slug', p.slug);
+          formData.append('title', p.title);
+          formData.append('description', p.description);
+          formData.append('tags', JSON.stringify(p.tags));
+          formData.append('repoUrl', p.repoUrl ?? '');
+          formData.append('demoUrl', p.demoUrl ?? '');
+          formData.append('colorTheme', p.colorTheme);
+          formData.append('isPublished', String(p.isPublished));
+          formData.append('sortOrder', String(p.sortOrder));
           return upsertProject(formData);
-        })
+        }),
       );
       router.refresh();
     } catch {
-      toast.error("Failed to save new order.");
+      toast.error('Failed to save new order.');
       setItems(items);
     }
   };
 
   return (
-    <div className="mx-auto max-w-4xl w-full space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">Projects</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Manage the projects shown in your portfolio.
           </p>
         </div>
@@ -377,9 +359,8 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
 
       {items.length === 0 ? (
         <Card className="border-dashed">
-          <CardContent className="py-12 text-center text-sm text-muted-foreground">
-            No projects yet. Add your first project to show it on your
-            portfolio.
+          <CardContent className="text-muted-foreground py-12 text-center text-sm">
+            No projects yet. Add your first project to show it on your portfolio.
           </CardContent>
         </Card>
       ) : (
@@ -389,20 +370,20 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
             return (
               <Card key={project.id} className="border shadow-sm">
                 <CardContent className="flex items-center gap-4 py-4">
-                  <div className="flex flex-col gap-1 shrink-0">
+                  <div className="flex shrink-0 flex-col gap-1">
                     <button
                       type="button"
-                      onClick={() => handleReorder(project, "up")}
+                      onClick={() => handleReorder(project, 'up')}
                       disabled={index === 0}
                       className="text-muted-foreground hover:text-foreground disabled:opacity-30"
                       aria-label="Move up"
                     >
                       <ArrowUp className="size-3.5" />
                     </button>
-                    <GripVertical className="size-3.5 text-muted-foreground/40 mx-auto" />
+                    <GripVertical className="text-muted-foreground/40 mx-auto size-3.5" />
                     <button
                       type="button"
-                      onClick={() => handleReorder(project, "down")}
+                      onClick={() => handleReorder(project, 'down')}
                       disabled={index === items.length - 1}
                       className="text-muted-foreground hover:text-foreground disabled:opacity-30"
                       aria-label="Move down"
@@ -411,20 +392,13 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                     </button>
                   </div>
 
-                  <div className="relative size-16 shrink-0 rounded-lg overflow-hidden bg-muted/40 border">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="bg-muted/40 relative size-16 shrink-0 overflow-hidden rounded-lg border">
+                    <Image src={project.image} alt={project.title} fill className="object-cover" />
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium truncate">
-                        {project.title}
-                      </h3>
+                      <h3 className="truncate font-medium">{project.title}</h3>
                       {theme && (
                         <span
                           className={`size-2.5 rounded-full border ${theme.border} bg-linear-to-br ${theme.from} ${theme.to}`}
@@ -436,16 +410,10 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {project.description}
-                    </p>
+                    <p className="text-muted-foreground truncate text-sm">{project.description}</p>
                     <div className="flex flex-wrap gap-1 pt-1">
                       {project.tags.slice(0, 4).map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs font-normal"
-                        >
+                        <Badge key={tag} variant="secondary" className="text-xs font-normal">
                           {tag}
                         </Badge>
                       ))}
@@ -457,7 +425,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex shrink-0 items-center gap-1">
                     {project.demoUrl && (
                       <Button asChild variant="ghost" size="icon">
                         <a
@@ -484,7 +452,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0 border-l pl-3">
+                  <div className="flex shrink-0 items-center gap-2 border-l pl-3">
                     <Switch
                       checked={project.isPublished}
                       onCheckedChange={() => handleTogglePublish(project)}
@@ -504,7 +472,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                       onClick={() => setDeleteTarget(project)}
                       aria-label="Delete project"
                     >
-                      <Trash2 className="size-4 text-destructive" />
+                      <Trash2 className="text-destructive size-4" />
                     </Button>
                   </div>
                 </CardContent>
@@ -516,15 +484,13 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
 
       {/* Create / edit dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {isEditing ? "Edit project" : "Add project"}
-            </DialogTitle>
+            <DialogTitle>{isEditing ? 'Edit project' : 'Add project'}</DialogTitle>
             <DialogDescription>
               {isEditing
-                ? "Update the details for this project."
-                : "Add a new project to your portfolio."}
+                ? 'Update the details for this project.'
+                : 'Add a new project to your portfolio.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -541,17 +507,12 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
               <div className="flex items-center gap-4">
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="relative h-24 w-40 shrink-0 rounded-xl border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 cursor-pointer overflow-hidden bg-muted/40 flex items-center justify-center transition-colors"
+                  className="border-muted-foreground/25 hover:border-primary/50 bg-muted/40 relative flex h-24 w-40 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-colors"
                 >
                   {previewUrl ? (
-                    <Image
-                      src={previewUrl}
-                      alt="Preview"
-                      fill
-                      className="object-cover"
-                    />
+                    <Image src={previewUrl} alt="Preview" fill className="object-cover" />
                   ) : (
-                    <UploadCloud className="size-6 text-muted-foreground" />
+                    <UploadCloud className="text-muted-foreground size-6" />
                   )}
                 </div>
                 <div className="space-y-1">
@@ -564,14 +525,12 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                   >
                     Upload image
                   </Button>
-                  <p className="text-xs text-muted-foreground">
-                    PNG or JPG, up to 10MB
-                  </p>
+                  <p className="text-muted-foreground text-xs">PNG or JPG, up to 10MB</p>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
@@ -589,7 +548,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                   value={form.slug}
                   onChange={(e) => {
                     setSlugTouched(true);
-                    updateField("slug")(e);
+                    updateField('slug')(e);
                   }}
                   placeholder="topdo"
                   disabled={isSaving}
@@ -602,7 +561,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
               <Textarea
                 id="description"
                 value={form.description}
-                onChange={updateField("description")}
+                onChange={updateField('description')}
                 rows={3}
                 placeholder="A modern productivity platform for organizing tasks..."
                 disabled={isSaving}
@@ -614,22 +573,20 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
               <Input
                 id="tags"
                 value={form.tags}
-                onChange={updateField("tags")}
+                onChange={updateField('tags')}
                 placeholder="Next.js, TypeScript, Tailwind CSS"
                 disabled={isSaving}
               />
-              <p className="text-xs text-muted-foreground">
-                Comma-separated.
-              </p>
+              <p className="text-muted-foreground text-xs">Comma-separated.</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="repoUrl">Repository URL</Label>
                 <Input
                   id="repoUrl"
                   value={form.repoUrl}
-                  onChange={updateField("repoUrl")}
+                  onChange={updateField('repoUrl')}
                   placeholder="https://github.com/you/repo"
                   disabled={isSaving}
                 />
@@ -639,21 +596,19 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                 <Input
                   id="demoUrl"
                   value={form.demoUrl}
-                  onChange={updateField("demoUrl")}
+                  onChange={updateField('demoUrl')}
                   placeholder="https://yourproject.com"
                   disabled={isSaving}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="colorTheme">Color theme</Label>
                 <Select
                   value={form.colorTheme}
-                  onValueChange={(value) =>
-                    setForm((prev) => ({ ...prev, colorTheme: value }))
-                  }
+                  onValueChange={(value) => setForm((prev) => ({ ...prev, colorTheme: value }))}
                   disabled={isSaving}
                 >
                   <SelectTrigger id="colorTheme">
@@ -676,7 +631,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
 
               <div className="grid gap-2">
                 <Label htmlFor="isPublished">Visibility</Label>
-                <div className="flex items-center gap-2 h-9">
+                <div className="flex h-9 items-center gap-2">
                   <Switch
                     id="isPublished"
                     checked={form.isPublished}
@@ -685,8 +640,8 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
                     }
                     disabled={isSaving}
                   />
-                  <span className="text-sm text-muted-foreground">
-                    {form.isPublished ? "Published" : "Draft"}
+                  <span className="text-muted-foreground text-sm">
+                    {form.isPublished ? 'Published' : 'Draft'}
                   </span>
                 </div>
               </div>
@@ -702,12 +657,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
             >
               Cancel
             </Button>
-            <Button
-              type="button"
-              className="gap-2"
-              onClick={handleSubmit}
-              disabled={isSaving}
-            >
+            <Button type="button" className="gap-2" onClick={handleSubmit} disabled={isSaving}>
               {isSaving ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />
@@ -716,7 +666,7 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
               ) : (
                 <>
                   <Save className="size-4" />
-                  {isEditing ? "Save changes" : "Create project"}
+                  {isEditing ? 'Save changes' : 'Create project'}
                 </>
               )}
             </Button>
@@ -735,23 +685,17 @@ export function ProjectManager({ projects }: { projects: ProjectRow[] }) {
             <AlertDialogDescription>
               {deleteTarget
                 ? `"${deleteTarget.title}" will be permanently removed from your portfolio. This can't be undone.`
-                : ""}
+                : ''}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                "Delete"
-              )}
+              {isDeleting ? <Loader2 className="size-4 animate-spin" /> : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

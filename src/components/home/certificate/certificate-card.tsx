@@ -25,10 +25,7 @@ const CERTIFICATE_THEME = {
 
 export function CertificateCard({ certificate }: CertificateCardProps) {
   const theme = CERTIFICATE_THEME;
-  const isPdf = certificate.certificateImage
-    .toLowerCase()
-    .split('?')[0]
-    .endsWith('.pdf');
+  const isPdf = certificate.certificateImage.toLowerCase().split('?')[0].endsWith('.pdf');
 
   return (
     <motion.article
@@ -41,7 +38,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
       <Card
         className={`group border-border/50 h-full overflow-hidden transition-all duration-300 ${theme.border} hover:shadow-xl ${theme.shadow}`}
       >
-        <div className="relative aspect-video overflow-hidden bg-muted/40">
+        <div className="bg-muted/40 relative aspect-video overflow-hidden">
           {isPdf ? (
             <object
               data={`${certificate.certificateImage}#toolbar=0&navpanes=0&view=FitH`}
@@ -119,11 +116,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
 
         <CardFooter className="flex flex-wrap gap-3">
           <Button asChild variant="outline" size="sm">
-            <a
-              href={certificate.certificateImage}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={certificate.certificateImage} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-4" />
               Preview certificate
             </a>

@@ -1,14 +1,14 @@
-import { getTechStack } from "@/data/tech-stack";
-import type { StackCategory } from "@/lib/techStackData";
+import { getTechStack } from '@/data/tech-stack';
+import type { StackCategory } from '@/lib/techStackData';
 
 const CATEGORY_ORDER = [
-  "Languages",
-  "Frontend",
-  "Backend",
-  "Database",
-  "Tools & DevOps",
-  "AI & ML",
-  "Data Structures & Algorithms",
+  'Languages',
+  'Frontend',
+  'Backend',
+  'Database',
+  'Tools & DevOps',
+  'AI & ML',
+  'Data Structures & Algorithms',
 ];
 
 export async function getTechStackSection(): Promise<StackCategory[]> {
@@ -17,7 +17,7 @@ export async function getTechStackSection(): Promise<StackCategory[]> {
   const grouped = new Map<string, StackCategory>();
 
   for (const item of items) {
-    const categoryId = item.category.toLowerCase().replace(/\s+/g, "-");
+    const categoryId = item.category.toLowerCase().replace(/\s+/g, '-');
 
     if (!grouped.has(categoryId)) {
       grouped.set(categoryId, {

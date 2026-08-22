@@ -1,17 +1,13 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq } from 'drizzle-orm';
 
-import { db } from "@/db";
-import { certifications } from "@/db/schema";
-import { defaultCertificates } from "@/lib/certificate";
+import { db } from '@/db';
+import { certifications } from '@/db/schema';
+import { defaultCertificates } from '@/lib/certificate';
 
-export type CertificationRow =
-  typeof certifications.$inferSelect;
+export type CertificationRow = typeof certifications.$inferSelect;
 
 export async function getAllCertifications() {
-  return await db
-    .select()
-    .from(certifications)
-    .orderBy(asc(certifications.sortOrder));
+  return await db.select().from(certifications).orderBy(asc(certifications.sortOrder));
 }
 
 export async function getPublishedCertifications() {
@@ -21,26 +17,17 @@ export async function getPublishedCertifications() {
     .where(eq(certifications.isPublished, true))
     .orderBy(asc(certifications.sortOrder));
 
-  return items.length > 0
-    ? items
-    : defaultCertificates;
+  return items.length > 0 ? items : defaultCertificates;
 }
 
-export async function getCertificationById(
-  id: string
-) {
-  const certification =
-    await db.query.certifications.findFirst({
-      where: (table, { eq }) => eq(table.id, id),
-    });
+export async function getCertificationById(id: string) {
+  const certification = await db.query.certifications.findFirst({
+    where: (table, { eq }) => eq(table.id, id),
+  });
 
   if (certification) {
     return certification;
   }
 
-  return (
-    defaultCertificates.find(
-      (certificate) => certificate.id === id
-    ) ?? null
-  );
+  return defaultCertificates.find((certificate) => certificate.id === id) ?? null;
 }

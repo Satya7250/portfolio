@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Loader2,
   Pencil,
@@ -11,8 +11,8 @@ import {
   Check,
   ChevronsUpDown,
   Search,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 import {
   DndContext,
   closestCenter,
@@ -21,30 +21,24 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import {
   createTechStackItem,
   updateTechStackItem,
   deleteTechStackItem,
-} from "@/actions/tech-stack";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/actions/tech-stack';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -53,7 +47,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -64,12 +58,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/alert-dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -77,9 +67,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { cn } from "@/lib/utils";
-import TechIcon from "@/components/home/stack/techIcon";
+} from '@/components/ui/command';
+import { cn } from '@/lib/utils';
+import TechIcon from '@/components/home/stack/techIcon';
 
 type TechStackItem = {
   id: string;
@@ -95,99 +85,99 @@ type TechStackItem = {
 // renders correctly — no typo-guessing possible.
 const ICON_GROUPS: { category: string; icons: { slug: string; label: string }[] }[] = [
   {
-    category: "Languages",
+    category: 'Languages',
     icons: [
-      { slug: "javascript", label: "JavaScript" },
-      { slug: "typescript", label: "TypeScript" },
-      { slug: "java", label: "Java" },
-      { slug: "cpp", label: "C++" },
-      { slug: "c", label: "C" },
-      { slug: "csharp", label: "C#" },
-      { slug: "python", label: "Python" },
-      { slug: "rust", label: "Rust" },
-      { slug: "go", label: "Go" },
-      { slug: "kotlin", label: "Kotlin" },
-      { slug: "swift", label: "Swift" },
+      { slug: 'javascript', label: 'JavaScript' },
+      { slug: 'typescript', label: 'TypeScript' },
+      { slug: 'java', label: 'Java' },
+      { slug: 'cpp', label: 'C++' },
+      { slug: 'c', label: 'C' },
+      { slug: 'csharp', label: 'C#' },
+      { slug: 'python', label: 'Python' },
+      { slug: 'rust', label: 'Rust' },
+      { slug: 'go', label: 'Go' },
+      { slug: 'kotlin', label: 'Kotlin' },
+      { slug: 'swift', label: 'Swift' },
     ],
   },
   {
-    category: "Frontend",
+    category: 'Frontend',
     icons: [
-      { slug: "html", label: "HTML5" },
-      { slug: "css", label: "CSS3" },
-      { slug: "nextjs", label: "Next.js" },
-      { slug: "react", label: "React" },
-      { slug: "tailwind", label: "Tailwind CSS" },
-      { slug: "framer", label: "Motion (Framer)" },
-      { slug: "shadcn", label: "shadcn/ui" },
-      { slug: "tanstack", label: "TanStack Query" },
-      { slug: "zustand", label: "Zustand" },
-      { slug: "vue", label: "Vue" },
-      { slug: "angular", label: "Angular" },
-      { slug: "svelte", label: "Svelte" },
-      { slug: "flutter", label: "Flutter" },
+      { slug: 'html', label: 'HTML5' },
+      { slug: 'css', label: 'CSS3' },
+      { slug: 'nextjs', label: 'Next.js' },
+      { slug: 'react', label: 'React' },
+      { slug: 'tailwind', label: 'Tailwind CSS' },
+      { slug: 'framer', label: 'Motion (Framer)' },
+      { slug: 'shadcn', label: 'shadcn/ui' },
+      { slug: 'tanstack', label: 'TanStack Query' },
+      { slug: 'zustand', label: 'Zustand' },
+      { slug: 'vue', label: 'Vue' },
+      { slug: 'angular', label: 'Angular' },
+      { slug: 'svelte', label: 'Svelte' },
+      { slug: 'flutter', label: 'Flutter' },
     ],
   },
   {
-    category: "Backend",
+    category: 'Backend',
     icons: [
-      { slug: "nodejs", label: "Node.js" },
-      { slug: "express", label: "Express" },
-      { slug: "springboot", label: "Spring Boot" },
-      { slug: "trpc", label: "tRPC" },
-      { slug: "graphql", label: "GraphQL" },
-      { slug: "prisma", label: "Prisma" },
-      { slug: "fastapi", label: "FastAPI" },
+      { slug: 'nodejs', label: 'Node.js' },
+      { slug: 'express', label: 'Express' },
+      { slug: 'springboot', label: 'Spring Boot' },
+      { slug: 'trpc', label: 'tRPC' },
+      { slug: 'graphql', label: 'GraphQL' },
+      { slug: 'prisma', label: 'Prisma' },
+      { slug: 'fastapi', label: 'FastAPI' },
     ],
   },
   {
-    category: "Database",
+    category: 'Database',
     icons: [
-      { slug: "postgresql", label: "PostgreSQL" },
-      { slug: "mysql", label: "MySQL" },
-      { slug: "mongodb", label: "MongoDB" },
-      { slug: "redis", label: "Redis" },
-      { slug: "supabase", label: "Supabase" },
-      { slug: "firebase", label: "Firebase" },
+      { slug: 'postgresql', label: 'PostgreSQL' },
+      { slug: 'mysql', label: 'MySQL' },
+      { slug: 'mongodb', label: 'MongoDB' },
+      { slug: 'redis', label: 'Redis' },
+      { slug: 'supabase', label: 'Supabase' },
+      { slug: 'firebase', label: 'Firebase' },
     ],
   },
   {
-    category: "Tools & DevOps",
+    category: 'Tools & DevOps',
     icons: [
-      { slug: "git", label: "Git" },
-      { slug: "github", label: "GitHub" },
-      { slug: "githubactions", label: "GitHub Actions" },
-      { slug: "docker", label: "Docker" },
-      { slug: "kubernetes", label: "Kubernetes" },
-      { slug: "vercel", label: "Vercel" },
-      { slug: "netlify", label: "Netlify" },
-      { slug: "turborepo", label: "Turborepo" },
-      { slug: "aws", label: "AWS" },
-      { slug: "gcp", label: "Google Cloud" },
-      { slug: "linux", label: "Linux" },
-      { slug: "nginx", label: "Nginx" },
-      { slug: "figma", label: "Figma" },
-      { slug: "postman", label: "Postman" },
-      { slug: "vscode", label: "VS Code" },
+      { slug: 'git', label: 'Git' },
+      { slug: 'github', label: 'GitHub' },
+      { slug: 'githubactions', label: 'GitHub Actions' },
+      { slug: 'docker', label: 'Docker' },
+      { slug: 'kubernetes', label: 'Kubernetes' },
+      { slug: 'vercel', label: 'Vercel' },
+      { slug: 'netlify', label: 'Netlify' },
+      { slug: 'turborepo', label: 'Turborepo' },
+      { slug: 'aws', label: 'AWS' },
+      { slug: 'gcp', label: 'Google Cloud' },
+      { slug: 'linux', label: 'Linux' },
+      { slug: 'nginx', label: 'Nginx' },
+      { slug: 'figma', label: 'Figma' },
+      { slug: 'postman', label: 'Postman' },
+      { slug: 'vscode', label: 'VS Code' },
     ],
   },
   {
-    category: "AI & ML",
+    category: 'AI & ML',
     icons: [
-      { slug: "openai", label: "OpenAI" },
-      { slug: "langchain", label: "LangChain" },
-      { slug: "vercelai", label: "Vercel AI SDK" },
-      { slug: "pinecone", label: "Pinecone" },
-      { slug: "tensorflow", label: "TensorFlow" },
-      { slug: "pytorch", label: "PyTorch" },
+      { slug: 'openai', label: 'OpenAI' },
+      { slug: 'langchain', label: 'LangChain' },
+      { slug: 'vercelai', label: 'Vercel AI SDK' },
+      { slug: 'pinecone', label: 'Pinecone' },
+      { slug: 'tensorflow', label: 'TensorFlow' },
+      { slug: 'pytorch', label: 'PyTorch' },
     ],
   },
   {
-    category: "Data Structures & Algorithms",
+    category: 'Data Structures & Algorithms',
     icons: [
-      { slug: "arraysstrings", label: "Arrays & Strings" },
-      { slug: "treesgraphs", label: "Trees & Graphs" },
-      { slug: "dynamicprogramming", label: "Dynamic Programming" },
+      { slug: 'arraysstrings', label: 'Arrays & Strings' },
+      { slug: 'treesgraphs', label: 'Trees & Graphs' },
+      { slug: 'dynamicprogramming', label: 'Dynamic Programming' },
     ],
   },
 ];
@@ -199,7 +189,7 @@ const KNOWN_CATEGORIES = ICON_GROUPS.map((g) => g.category);
 
 export function TechStackManager({ items }: { items: TechStackItem[] }) {
   const router = useRouter();
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState('');
 
   const grouped = React.useMemo(() => {
     const map = new Map<string, TechStackItem[]>();
@@ -235,8 +225,8 @@ export function TechStackManager({ items }: { items: TechStackItem[] }) {
         ([category, categoryItems]) =>
           [category, categoryItems.filter((i) => i.name.toLowerCase().includes(q))] as [
             string,
-            TechStackItem[]
-          ]
+            TechStackItem[],
+          ],
       )
       .filter(([, categoryItems]) => categoryItems.length > 0);
   }, [grouped, query]);
@@ -253,27 +243,27 @@ export function TechStackManager({ items }: { items: TechStackItem[] }) {
       await Promise.all(
         updates.map(({ item, order }) => {
           const formData = new FormData();
-          formData.append("name", item.name);
-          formData.append("icon", item.icon);
-          formData.append("category", item.category);
-          formData.append("brandColor", item.brandColor ?? "");
-          formData.append("sortOrder", String(order));
+          formData.append('name', item.name);
+          formData.append('icon', item.icon);
+          formData.append('category', item.category);
+          formData.append('brandColor', item.brandColor ?? '');
+          formData.append('sortOrder', String(order));
           return updateTechStackItem(item.id, formData);
-        })
+        }),
       );
       router.refresh();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to save order.");
+      toast.error(error?.message || 'Failed to save order.');
       router.refresh();
     }
   };
 
   return (
-    <div className="mx-auto max-w-4xl w-full space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold">Tech Stack</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Manage the technologies shown in your portfolio's tech stack section.
           </p>
         </div>
@@ -290,7 +280,7 @@ export function TechStackManager({ items }: { items: TechStackItem[] }) {
       </div>
 
       <div className="relative w-full sm:max-w-xs">
-        <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute top-2.5 left-2.5 size-4" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -301,9 +291,9 @@ export function TechStackManager({ items }: { items: TechStackItem[] }) {
 
       {filteredGrouped.length === 0 && (
         <Card>
-          <CardContent className="py-10 text-center text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground py-10 text-center text-sm">
             {query
-              ? "No technologies match your search."
+              ? 'No technologies match your search.'
               : 'No technologies added yet. Click "Add Technology" to get started.'}
           </CardContent>
         </Card>
@@ -314,7 +304,7 @@ export function TechStackManager({ items }: { items: TechStackItem[] }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-base">{category}</CardTitle>
             <CardDescription>
-              {categoryItems.length} item{categoryItems.length !== 1 ? "s" : ""}
+              {categoryItems.length} item{categoryItems.length !== 1 ? 's' : ''}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -351,7 +341,7 @@ function SortableCategoryList({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const [mounted, setMounted] = React.useState(false);
@@ -385,35 +375,20 @@ function SortableCategoryList({
     return (
       <div className="space-y-2">
         {items.map((item) => (
-          <ItemRow
-            key={item.id}
-            item={item}
-            onRefresh={onRefresh}
-          />
+          <ItemRow key={item.id} item={item} onRefresh={onRefresh} />
         ))}
       </div>
     );
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext
-        items={items.map((i) => i.id)}
-        strategy={verticalListSortingStrategy}
-      >
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-2">
           {items.map((item) => (
             <SortableRow key={item.id} id={item.id}>
               {(dragHandle) => (
-                <ItemRow
-                  item={item}
-                  dragHandle={dragHandle}
-                  onRefresh={onRefresh}
-                />
+                <ItemRow item={item} dragHandle={dragHandle} onRefresh={onRefresh} />
               )}
             </SortableRow>
           ))}
@@ -430,8 +405,9 @@ function SortableRow({
   id: string;
   children: (dragHandle: React.ReactNode) => React.ReactNode;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -441,7 +417,7 @@ function SortableRow({
   const dragHandle = (
     <button
       type="button"
-      className="cursor-grab touch-none text-muted-foreground active:cursor-grabbing"
+      className="text-muted-foreground cursor-grab touch-none active:cursor-grabbing"
       aria-label="Drag to reorder"
       {...attributes}
       {...listeners}
@@ -451,7 +427,7 @@ function SortableRow({
   );
 
   return (
-    <div ref={setNodeRef} style={style} className={cn(isDragging && "opacity-60 z-10")}>
+    <div ref={setNodeRef} style={style} className={cn(isDragging && 'z-10 opacity-60')}>
       {children(dragHandle)}
     </div>
   );
@@ -467,9 +443,9 @@ function ItemRow({
   onRefresh: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2">
-      <div className="flex items-center gap-3 min-w-0">
-        {dragHandle ?? <GripVertical className="size-4 text-muted-foreground/40 shrink-0" />}
+    <div className="bg-muted/30 flex items-center justify-between gap-3 rounded-lg border px-3 py-2">
+      <div className="flex min-w-0 items-center gap-3">
+        {dragHandle ?? <GripVertical className="text-muted-foreground/40 size-4 shrink-0" />}
         <TechIcon
           name={item.name}
           icon={item.icon}
@@ -477,14 +453,14 @@ function ItemRow({
           className="h-6 w-6 shrink-0"
         />
         <div className="min-w-0">
-          <p className="text-sm font-medium truncate">{item.name}</p>
-          <p className="text-xs text-muted-foreground truncate">
+          <p className="truncate text-sm font-medium">{item.name}</p>
+          <p className="text-muted-foreground truncate text-xs">
             icon: {item.icon} · order: {item.sortOrder}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-1 shrink-0">
+      <div className="flex shrink-0 items-center gap-1">
         <ItemFormDialog
           mode="edit"
           item={item}
@@ -503,7 +479,7 @@ function ItemRow({
               toast.success(`Removed ${item.name}`);
               onRefresh();
             } catch (error: any) {
-              toast.error(error?.message || "Failed to delete.");
+              toast.error(error?.message || 'Failed to delete.');
             }
           }}
         />
@@ -527,7 +503,7 @@ function DeleteConfirm({
         <Button
           size="icon"
           variant="ghost"
-          className="size-8 text-muted-foreground hover:text-destructive"
+          className="text-muted-foreground hover:text-destructive size-8"
         >
           <Trash2 className="size-4" />
         </Button>
@@ -550,7 +526,7 @@ function DeleteConfirm({
               setIsDeleting(false);
             }}
           >
-            {isDeleting ? <Loader2 className="size-4 animate-spin" /> : "Remove"}
+            {isDeleting ? <Loader2 className="size-4 animate-spin" /> : 'Remove'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -616,13 +592,14 @@ function IconPicker({
                     }}
                     className="gap-2"
                   >
-                    <TechIcon name={iconOpt.label} icon={iconOpt.slug} className="h-5 w-5 shrink-0" />
+                    <TechIcon
+                      name={iconOpt.label}
+                      icon={iconOpt.slug}
+                      className="h-5 w-5 shrink-0"
+                    />
                     <span className="flex-1">{iconOpt.label}</span>
                     <Check
-                      className={cn(
-                        "size-4",
-                        value === iconOpt.slug ? "opacity-100" : "opacity-0"
-                      )}
+                      className={cn('size-4', value === iconOpt.slug ? 'opacity-100' : 'opacity-0')}
                     />
                   </CommandItem>
                 ))}
@@ -641,7 +618,7 @@ function ItemFormDialog({
   trigger,
   onSuccess,
 }: {
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   item?: TechStackItem;
   trigger: React.ReactNode;
   onSuccess: () => void;
@@ -649,17 +626,17 @@ function ItemFormDialog({
   const [open, setOpen] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
 
-  const [name, setName] = React.useState(item?.name ?? "");
-  const [icon, setIcon] = React.useState(item?.icon ?? "");
-  const [category, setCategory] = React.useState(item?.category ?? "");
-  const [brandColor, setBrandColor] = React.useState(item?.brandColor ?? "");
+  const [name, setName] = React.useState(item?.name ?? '');
+  const [icon, setIcon] = React.useState(item?.icon ?? '');
+  const [category, setCategory] = React.useState(item?.category ?? '');
+  const [brandColor, setBrandColor] = React.useState(item?.brandColor ?? '');
   const [sortOrder, setSortOrder] = React.useState(String(item?.sortOrder ?? 0));
 
   const resetForm = () => {
-    setName(item?.name ?? "");
-    setIcon(item?.icon ?? "");
-    setCategory(item?.category ?? "");
-    setBrandColor(item?.brandColor ?? "");
+    setName(item?.name ?? '');
+    setIcon(item?.icon ?? '');
+    setCategory(item?.category ?? '');
+    setBrandColor(item?.brandColor ?? '');
     setSortOrder(String(item?.sortOrder ?? 0));
   };
 
@@ -671,25 +648,25 @@ function ItemFormDialog({
 
   const handleSubmit = async () => {
     if (!name.trim() || !icon.trim() || !category.trim()) {
-      toast.error("Name, icon, and category are required.");
+      toast.error('Name, icon, and category are required.');
       return;
     }
 
     try {
       setIsSaving(true);
       const formData = new FormData();
-      formData.append("name", name.trim());
-      formData.append("icon", icon.trim());
-      formData.append("category", category.trim());
-      formData.append("brandColor", brandColor.trim());
-      formData.append("sortOrder", sortOrder);
+      formData.append('name', name.trim());
+      formData.append('icon', icon.trim());
+      formData.append('category', category.trim());
+      formData.append('brandColor', brandColor.trim());
+      formData.append('sortOrder', sortOrder);
 
-      if (mode === "create") {
+      if (mode === 'create') {
         await createTechStackItem(formData);
-        toast.success("Technology added.");
+        toast.success('Technology added.');
       } else if (item) {
         await updateTechStackItem(item.id, formData);
-        toast.success("Technology updated.");
+        toast.success('Technology updated.');
       }
 
       setOpen(false);
@@ -699,7 +676,7 @@ function ItemFormDialog({
       resetForm();
       onSuccess();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to save.");
+      toast.error(error?.message || 'Failed to save.');
     } finally {
       setIsSaving(false);
     }
@@ -716,10 +693,10 @@ function ItemFormDialog({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{mode === "create" ? "Add Technology" : "Edit Technology"}</DialogTitle>
+          <DialogTitle>{mode === 'create' ? 'Add Technology' : 'Edit Technology'}</DialogTitle>
           <DialogDescription>
-            {mode === "create"
-              ? "Pick an icon, then confirm the details."
+            {mode === 'create'
+              ? 'Pick an icon, then confirm the details.'
               : "Update this technology's details."}
           </DialogDescription>
         </DialogHeader>
@@ -771,12 +748,12 @@ function ItemFormDialog({
                 />
                 {brandColor && (
                   <span
-                    className="size-8 rounded-md border shrink-0"
+                    className="size-8 shrink-0 rounded-md border"
                     style={{ backgroundColor: brandColor }}
                   />
                 )}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Optional — the icon already has a default brand color.
               </p>
             </div>
@@ -795,11 +772,22 @@ function ItemFormDialog({
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSaving}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={isSaving}
+          >
             Cancel
           </Button>
           <Button type="button" onClick={handleSubmit} disabled={isSaving}>
-            {isSaving ? <Loader2 className="size-4 animate-spin" /> : mode === "create" ? "Add" : "Save"}
+            {isSaving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : mode === 'create' ? (
+              'Add'
+            ) : (
+              'Save'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

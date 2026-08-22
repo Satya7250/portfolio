@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Image from "next/image";
+import * as React from 'react';
+import Image from 'next/image';
 import {
   ArrowDown,
   ArrowUp,
@@ -12,14 +12,10 @@ import {
   Plus,
   Search,
   Trash2,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-import {
-  deleteCertificate,
-  togglePublish,
-  updateCertificateOrder,
-} from "@/actions/certificate";
+import { deleteCertificate, togglePublish, updateCertificateOrder } from '@/actions/certificate';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,20 +25,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { CertificateForm } from "@/components/admin/certificates/certificate-form";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { CertificateForm } from '@/components/admin/certificates/certificate-form';
 
 export interface Certification {
   id: string;
@@ -61,21 +57,16 @@ export interface CertificationManagerProps {
   initialCertifications: Certification[];
 }
 
-export function CertificationManager({
-  initialCertifications,
-}: CertificationManagerProps) {
+export function CertificationManager({ initialCertifications }: CertificationManagerProps) {
   const [certifications, setCertifications] = React.useState(() =>
     [...initialCertifications].sort((a, b) => a.sortOrder - b.sortOrder),
   );
-  const [search, setSearch] = React.useState("");
-  const [deleteTarget, setDeleteTarget] = React.useState<Certification | null>(
-    null,
-  );
+  const [search, setSearch] = React.useState('');
+  const [deleteTarget, setDeleteTarget] = React.useState<Certification | null>(null);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [isUpdating, setIsUpdating] = React.useState<string | null>(null);
   const [formOpen, setFormOpen] = React.useState(false);
-  const [editingCertificate, setEditingCertificate] =
-    React.useState<Certification | null>(null);
+  const [editingCertificate, setEditingCertificate] = React.useState<Certification | null>(null);
 
   const filteredCertifications = certifications.filter((certificate) => {
     const query = search.trim().toLowerCase();
@@ -90,43 +81,31 @@ export function CertificationManager({
     const isPublished = !certificate.isPublished;
     setIsUpdating(certificate.id);
     setCertifications((current) =>
-      current.map((item) =>
-        item.id === certificate.id ? { ...item, isPublished } : item,
-      ),
+      current.map((item) => (item.id === certificate.id ? { ...item, isPublished } : item)),
     );
 
     try {
       await togglePublish(certificate.id, isPublished);
-      toast.success(
-        isPublished ? "Certificate published." : "Certificate unpublished.",
-      );
+      toast.success(isPublished ? 'Certificate published.' : 'Certificate unpublished.');
     } catch {
       setCertifications((current) =>
         current.map((item) =>
-          item.id === certificate.id
-            ? { ...item, isPublished: certificate.isPublished }
-            : item,
+          item.id === certificate.id ? { ...item, isPublished: certificate.isPublished } : item,
         ),
       );
-      toast.error("Unable to update certificate visibility.");
+      toast.error('Unable to update certificate visibility.');
     } finally {
       setIsUpdating(null);
     }
   };
 
-  const handleReorder = async (
-    certificate: Certification,
-    direction: "up" | "down",
-  ) => {
+  const handleReorder = async (certificate: Certification, direction: 'up' | 'down') => {
     const index = certifications.findIndex((item) => item.id === certificate.id);
-    const swapIndex = direction === "up" ? index - 1 : index + 1;
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
     if (swapIndex < 0 || swapIndex >= certifications.length) return;
 
     const reordered = [...certifications];
-    [reordered[index], reordered[swapIndex]] = [
-      reordered[swapIndex],
-      reordered[index],
-    ];
+    [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
     const withSortOrder = reordered.map((item, itemIndex) => ({
       ...item,
       sortOrder: itemIndex,
@@ -134,12 +113,10 @@ export function CertificationManager({
     setCertifications(withSortOrder);
 
     try {
-      await updateCertificateOrder(
-        withSortOrder.map(({ id, sortOrder }) => ({ id, sortOrder })),
-      );
+      await updateCertificateOrder(withSortOrder.map(({ id, sortOrder }) => ({ id, sortOrder })));
     } catch {
       setCertifications(certifications);
-      toast.error("Unable to save certificate order.");
+      toast.error('Unable to save certificate order.');
     }
   };
 
@@ -148,19 +125,17 @@ export function CertificationManager({
 
     const removed = deleteTarget;
     setIsDeleting(true);
-    setCertifications((current) =>
-      current.filter(({ id }) => id !== removed.id),
-    );
+    setCertifications((current) => current.filter(({ id }) => id !== removed.id));
     setDeleteTarget(null);
 
     try {
       await deleteCertificate(removed.id);
-      toast.success("Certificate deleted.");
+      toast.success('Certificate deleted.');
     } catch {
       setCertifications((current) =>
         [...current, removed].sort((a, b) => a.sortOrder - b.sortOrder),
       );
-      toast.error("Unable to delete certificate.");
+      toast.error('Unable to delete certificate.');
     } finally {
       setIsDeleting(false);
     }
@@ -186,8 +161,8 @@ export function CertificationManager({
           </p>
         </div>
         <Button className="gap-2 self-start" onClick={openCreateForm}>
-            <Plus className="size-4" />
-            Add certificate
+          <Plus className="size-4" />
+          Add certificate
         </Button>
       </div>
 
@@ -223,9 +198,7 @@ export function CertificationManager({
       ) : (
         <div className="space-y-3">
           {filteredCertifications.map((certificate) => {
-            const index = certifications.findIndex(
-              (item) => item.id === certificate.id,
-            );
+            const index = certifications.findIndex((item) => item.id === certificate.id);
             return (
               <Card key={certificate.id} className="border shadow-sm">
                 <CardContent className="flex flex-wrap items-center gap-4 py-4">
@@ -234,7 +207,7 @@ export function CertificationManager({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      onClick={() => void handleReorder(certificate, "up")}
+                      onClick={() => void handleReorder(certificate, 'up')}
                       disabled={index === 0}
                       aria-label={`Move ${certificate.title} up`}
                     >
@@ -245,7 +218,7 @@ export function CertificationManager({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      onClick={() => void handleReorder(certificate, "down")}
+                      onClick={() => void handleReorder(certificate, 'down')}
                       disabled={index === certifications.length - 1}
                       aria-label={`Move ${certificate.title} down`}
                     >
@@ -253,7 +226,7 @@ export function CertificationManager({
                     </Button>
                   </div>
 
-                  <div className="relative size-16 shrink-0 overflow-hidden rounded-lg border bg-muted/40">
+                  <div className="bg-muted/40 relative size-16 shrink-0 overflow-hidden rounded-lg border">
                     <Image
                       src={certificate.certificateImage}
                       alt={certificate.title}
@@ -266,15 +239,13 @@ export function CertificationManager({
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="truncate font-medium">{certificate.title}</h3>
-                      <Badge
-                        variant={certificate.isPublished ? "default" : "outline"}
-                      >
-                        {certificate.isPublished ? "Published" : "Draft"}
+                      <Badge variant={certificate.isPublished ? 'default' : 'outline'}>
+                        {certificate.isPublished ? 'Published' : 'Draft'}
                       </Badge>
                     </div>
                     <p className="text-muted-foreground truncate text-sm">
                       {certificate.issuer}
-                      {certificate.issueDate ? ` · ${certificate.issueDate}` : ""}
+                      {certificate.issueDate ? ` · ${certificate.issueDate}` : ''}
                     </p>
                   </div>
 
@@ -286,11 +257,7 @@ export function CertificationManager({
                         size="icon"
                         aria-label="Open verification link"
                       >
-                        <a
-                          href={certificate.verifyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                        <a href={certificate.verifyUrl} target="_blank" rel="noopener noreferrer">
                           <ExternalLink />
                         </a>
                       </Button>
@@ -334,7 +301,7 @@ export function CertificationManager({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete certificate?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes {deleteTarget?.title ?? "this certificate"}.
+              This permanently removes {deleteTarget?.title ?? 'this certificate'}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -347,7 +314,7 @@ export function CertificationManager({
                 void handleDelete();
               }}
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -362,13 +329,11 @@ export function CertificationManager({
       >
         <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingCertificate ? "Edit certificate" : "Add certificate"}
-            </DialogTitle>
+            <DialogTitle>{editingCertificate ? 'Edit certificate' : 'Add certificate'}</DialogTitle>
             <DialogDescription>
               {editingCertificate
-                ? "Update the details for this certificate."
-                : "Add a certificate to your portfolio."}
+                ? 'Update the details for this certificate.'
+                : 'Add a certificate to your portfolio.'}
             </DialogDescription>
           </DialogHeader>
           <CertificateForm

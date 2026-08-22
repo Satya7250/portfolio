@@ -1,5 +1,5 @@
-import { ChartAreaInteractive } from "@/components/admin/dashboard/chart-area-interactive";
-import { SectionCards } from "@/components/admin/dashboard/section-cards";
+import { ChartAreaInteractive } from '@/components/admin/dashboard/chart-area-interactive';
+import { SectionCards } from '@/components/admin/dashboard/section-cards';
 
 export default function DashboardPage() {
   return (

@@ -1,4 +1,4 @@
-import { getAbout } from "@/data/about";
+import { getAbout } from '@/data/about';
 
 export async function getAboutSection() {
   const about = await getAbout();

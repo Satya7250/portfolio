@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Loader2, Save, UploadCloud } from "lucide-react";
-import { toast } from "sonner";
+import * as React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Loader2, Save, UploadCloud } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { upsertAbout } from "@/actions/about";
-import { Button } from "@/components/ui/button";
+import { upsertAbout } from '@/actions/about';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -15,10 +15,10 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -36,22 +36,19 @@ export function AboutManager({ about }: { about: AboutData }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [form, setForm] = React.useState({
-    imageAlt: about?.imageAlt ?? "",
-    intro: about?.intro ?? "",
-    name: about?.name ?? "",
-    role: about?.role ?? "",
-    bio: about?.bio ?? "",
+    imageAlt: about?.imageAlt ?? '',
+    intro: about?.intro ?? '',
+    name: about?.name ?? '',
+    role: about?.role ?? '',
+    bio: about?.bio ?? '',
   });
 
   const [imageFile, setImageFile] = React.useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(
-    about?.imageSrc ?? null
-  );
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(about?.imageSrc ?? null);
   const [isSaving, setIsSaving] = React.useState(false);
 
   const updateField =
-    (key: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [key]: e.target.value }));
     };
 
@@ -59,13 +56,13 @@ export function AboutManager({ about }: { about: AboutData }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file.");
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file.');
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
-      toast.error("Image size exceeds 10MB limit.");
+      toast.error('Image size exceeds 10MB limit.');
       return;
     }
 
@@ -77,12 +74,12 @@ export function AboutManager({ about }: { about: AboutData }) {
     const requiredFields = Object.entries(form);
     const missing = requiredFields.find(([, value]) => !value.trim());
     if (missing) {
-      toast.error("Please fill in all fields before saving.");
+      toast.error('Please fill in all fields before saving.');
       return;
     }
 
     if (!about?.imageSrc && !imageFile) {
-      toast.error("Please upload an image.");
+      toast.error('Please upload an image.');
       return;
     }
 
@@ -95,35 +92,31 @@ export function AboutManager({ about }: { about: AboutData }) {
       });
 
       if (imageFile) {
-        formData.append("image", imageFile);
+        formData.append('image', imageFile);
       }
 
       const result = await upsertAbout(formData);
 
       if (result?.success) {
-        toast.success("About section updated successfully!");
+        toast.success('About section updated successfully!');
         setImageFile(null);
         router.refresh();
       } else {
-        toast.error("Failed to update. Please try again.");
+        toast.error('Failed to update. Please try again.');
       }
     } catch (error: any) {
-      console.error("About update error:", error);
-      toast.error(
-        error?.message || "An unexpected error occurred while saving."
-      );
+      console.error('About update error:', error);
+      toast.error(error?.message || 'An unexpected error occurred while saving.');
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="mx-auto max-w-3xl w-full">
+    <div className="mx-auto w-full max-w-3xl">
       <Card className="border shadow-sm">
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">
-            About Content
-          </CardTitle>
+          <CardTitle className="text-lg font-semibold">About Content</CardTitle>
           <CardDescription>
             Update your profile image and bio shown in the About section.
           </CardDescription>
@@ -132,9 +125,7 @@ export function AboutManager({ about }: { about: AboutData }) {
         <CardContent className="space-y-8">
           {/* Image */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Profile Image
-            </h3>
+            <h3 className="text-muted-foreground text-sm font-medium">Profile Image</h3>
 
             <input
               ref={fileInputRef}
@@ -148,17 +139,12 @@ export function AboutManager({ about }: { about: AboutData }) {
             <div className="flex items-center gap-4">
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="relative size-24 shrink-0 rounded-xl border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 cursor-pointer overflow-hidden bg-muted/40 flex items-center justify-center transition-colors"
+                className="border-muted-foreground/25 hover:border-primary/50 bg-muted/40 relative flex size-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-colors"
               >
                 {previewUrl ? (
-                  <Image
-                    src={previewUrl}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={previewUrl} alt="Preview" fill className="object-cover" />
                 ) : (
-                  <UploadCloud className="size-6 text-muted-foreground" />
+                  <UploadCloud className="text-muted-foreground size-6" />
                 )}
               </div>
 
@@ -172,9 +158,7 @@ export function AboutManager({ about }: { about: AboutData }) {
                 >
                   Change image
                 </Button>
-                <p className="text-xs text-muted-foreground">
-                  PNG or JPG, up to 10MB
-                </p>
+                <p className="text-muted-foreground text-xs">PNG or JPG, up to 10MB</p>
               </div>
             </div>
 
@@ -183,7 +167,7 @@ export function AboutManager({ about }: { about: AboutData }) {
               <Input
                 id="imageAlt"
                 value={form.imageAlt}
-                onChange={updateField("imageAlt")}
+                onChange={updateField('imageAlt')}
                 placeholder="Portrait of..."
                 disabled={isSaving}
               />
@@ -192,28 +176,26 @@ export function AboutManager({ about }: { about: AboutData }) {
 
           {/* AboutMe content */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Profile Content
-            </h3>
+            <h3 className="text-muted-foreground text-sm font-medium">Profile Content</h3>
 
             <div className="grid gap-2">
               <Label htmlFor="intro">Intro</Label>
               <Input
                 id="intro"
                 value={form.intro}
-                onChange={updateField("intro")}
+                onChange={updateField('intro')}
                 placeholder="Hi, I'm"
                 disabled={isSaving}
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   value={form.name}
-                  onChange={updateField("name")}
+                  onChange={updateField('name')}
                   disabled={isSaving}
                 />
               </div>
@@ -223,7 +205,7 @@ export function AboutManager({ about }: { about: AboutData }) {
                 <Input
                   id="role"
                   value={form.role}
-                  onChange={updateField("role")}
+                  onChange={updateField('role')}
                   placeholder="Full Stack Developer"
                   disabled={isSaving}
                 />
@@ -235,7 +217,7 @@ export function AboutManager({ about }: { about: AboutData }) {
               <Textarea
                 id="bio"
                 value={form.bio}
-                onChange={updateField("bio")}
+                onChange={updateField('bio')}
                 rows={5}
                 disabled={isSaving}
               />
@@ -243,13 +225,8 @@ export function AboutManager({ about }: { about: AboutData }) {
           </div>
         </CardContent>
 
-        <CardFooter className="pt-2 border-t">
-          <Button
-            type="button"
-            className="w-full gap-2"
-            onClick={handleSubmit}
-            disabled={isSaving}
-          >
+        <CardFooter className="border-t pt-2">
+          <Button type="button" className="w-full gap-2" onClick={handleSubmit} disabled={isSaving}>
             {isSaving ? (
               <>
                 <Loader2 className="size-4 animate-spin" />

@@ -1,19 +1,19 @@
-"use server";
+'use server';
 
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
-import { db } from "@/db";
-import { sectionHeadings } from "@/db/schema";
+import { db } from '@/db';
+import { sectionHeadings } from '@/db/schema';
 
 export async function upsertSectionHeading(formData: FormData) {
-  const section = formData.get("section")?.toString().trim();
-  const eyebrow = formData.get("eyebrow")?.toString().trim();
-  const title = formData.get("title")?.toString().trim();
-  const description = formData.get("description")?.toString().trim();
+  const section = formData.get('section')?.toString().trim();
+  const eyebrow = formData.get('eyebrow')?.toString().trim();
+  const title = formData.get('title')?.toString().trim();
+  const description = formData.get('description')?.toString().trim();
 
   if (!section || !eyebrow || !title || !description) {
-    throw new Error("All fields are required.");
+    throw new Error('All fields are required.');
   }
 
   const existing = await db.query.sectionHeadings.findFirst({
@@ -29,7 +29,7 @@ export async function upsertSectionHeading(formData: FormData) {
     await db.insert(sectionHeadings).values({ section, eyebrow, title, description });
   }
 
-  revalidatePath("/", "layout");
+  revalidatePath('/', 'layout');
 
   return { success: true };
 }

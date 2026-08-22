@@ -47,13 +47,13 @@ export default function ContactSection() {
                   <Mail className="h-5 w-5" />
                 </div>
 
-                <span className="min-w-0 break-all text-sm font-medium tracking-tight sm:text-base md:text-lg">
+                <span className="min-w-0 text-sm font-medium tracking-tight break-all sm:text-base md:text-lg">
                   {contact.email}
                 </span>
               </div>
 
               <ArrowUpRight
-                className={`hidden sm:block text-muted-foreground h-5 w-5 transition-all duration-300 ${THEME.hoverText} group-hover:translate-x-1 group-hover:-translate-y-1`}
+                className={`text-muted-foreground hidden h-5 w-5 transition-all duration-300 sm:block ${THEME.hoverText} group-hover:translate-x-1 group-hover:-translate-y-1`}
               />
             </div>
           </CardContent>

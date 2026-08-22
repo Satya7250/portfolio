@@ -1,10 +1,10 @@
-import { ResumeManager } from "@/components/admin/resume/resume-manager";
-import { Separator } from "@/components/ui/separator";
-import { FileText } from "lucide-react";
+import { ResumeManager } from '@/components/admin/resume/resume-manager';
+import { Separator } from '@/components/ui/separator';
+import { FileText } from 'lucide-react';
 
 export const metadata = {
-  title: "Resume Management | Admin Dashboard",
-  description: "Upload your portfolio resume.",
+  title: 'Resume Management | Admin Dashboard',
+  description: 'Upload your portfolio resume.',
 };
 
 export default function ResumePage() {
@@ -12,12 +12,10 @@ export default function ResumePage() {
     <div className="flex-1 space-y-6">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <FileText className="size-6 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Resume Management
-          </h1>
+          <FileText className="text-primary size-6" />
+          <h1 className="text-foreground text-2xl font-bold tracking-tight">Resume Management</h1>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Upload a PDF resume to update your live portfolio.
         </p>
       </div>
