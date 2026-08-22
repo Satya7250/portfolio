@@ -44,10 +44,10 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         <div className="relative aspect-video overflow-hidden bg-muted/40">
           {isPdf ? (
             <object
-              data={certificate.certificateImage}
+              data={`${certificate.certificateImage}#toolbar=0&navpanes=0&view=FitH`}
               type="application/pdf"
               title={`${certificate.title} PDF preview`}
-              className="size-full"
+              className="absolute top-0 -right-5 h-full w-[calc(100%+20px)]"
             >
               <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2 text-sm">
                 <FileText className="size-8" />
