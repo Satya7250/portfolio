@@ -72,9 +72,9 @@ const data = {
       icon: <FileTextIcon />,
     },
     {
-      title: "Experience",
-      url: "/admin/dashboard/experience",
-      icon: <BriefcaseBusinessIcon />,
+      title: "Contact",
+      url: "/admin/dashboard/contact",
+      icon: <User />,
     },
   ],
 

@@ -253,3 +253,20 @@ export const certifications = pgTable("certifications", {
     .$onUpdate(() => new Date())
     .notNull(),
 });
+
+
+//contact
+export const contactInfo = pgTable("contact_info", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  email: text("email").notNull(),
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
