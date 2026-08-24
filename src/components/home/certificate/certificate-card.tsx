@@ -23,6 +23,36 @@ const CERTIFICATE_THEME = {
   link: 'text-pink-400',
 };
 
+function PdfPreview({ certificate }: { certificate: Certificate }) {
+  return (
+    <>
+      {/* Desktop / tablet: inline embed */}
+      <object
+        data={`${certificate.certificateImage}#toolbar=0&navpanes=0&view=FitH`}
+        type="application/pdf"
+        title={`${certificate.title} PDF preview`}
+        className="absolute top-0 -right-5 hidden h-full w-[calc(100%+20px)] md:block"
+      >
+        <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2 text-sm">
+          <FileText className="size-8" />
+          PDF certificate
+        </div>
+      </object>
+
+      {/* Mobile: tap-through card instead of a broken/blank inline embed */}
+      <a
+        href={certificate.certificateImage}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-muted-foreground hover:text-foreground hover:bg-muted/60 absolute inset-0 flex size-full flex-col items-center justify-center gap-2 text-sm transition-colors md:hidden"
+      >
+        <FileText className="size-8" />
+        <span className="font-medium">Tap to view PDF</span>
+      </a>
+    </>
+  );
+}
+
 export function CertificateCard({ certificate }: CertificateCardProps) {
   const theme = CERTIFICATE_THEME;
   const isPdf = certificate.certificateImage.toLowerCase().split('?')[0].endsWith('.pdf');
@@ -40,17 +70,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
       >
         <div className="bg-muted/40 relative aspect-video overflow-hidden">
           {isPdf ? (
-            <object
-              data={`${certificate.certificateImage}#toolbar=0&navpanes=0&view=FitH`}
-              type="application/pdf"
-              title={`${certificate.title} PDF preview`}
-              className="absolute top-0 -right-5 h-full w-[calc(100%+20px)]"
-            >
-              <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2 text-sm">
-                <FileText className="size-8" />
-                PDF certificate
-              </div>
-            </object>
+            <PdfPreview certificate={certificate} />
           ) : (
             <Image
               src={certificate.certificateImage}

@@ -40,9 +40,9 @@ const navigationLinks = [
 
 const resourceLinks = [
   { name: 'Resume', href: '/resume' },
-  { name: 'Blog', href: '/blog' },
+  { name: 'Blog', href: getSectionHref('blogs') },
   { name: 'Tech Stack', href: getSectionHref('stack') },
-  { name: 'Certificates', href: getSectionHref('certificates') },
+  { name: 'Certificates', href: getSectionHref('certifications') },
 ];
 
 const legalLinks = [
@@ -54,20 +54,27 @@ export default function Footer() {
   return (
     <footer className="border-border bg-background border-t">
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 text-center md:grid-cols-2 md:text-left lg:grid-cols-4">
           {/* Social */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">Connect</h3>
+            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">
+              Connect
+            </h3>
 
-            <div className="flex gap-3">
+            <div className="flex justify-center gap-3 md:justify-start">
               {socialLinks.map(({ name, href, icon: Icon }) => {
                 const isExternal = href.startsWith('http');
+
                 return (
                   <motion.div
                     key={name}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 400,
+                      damping: 17,
+                    }}
                   >
                     <Link
                       href={href}
@@ -86,7 +93,9 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">Navigation</h3>
+            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">
+              Navigation
+            </h3>
 
             <ul className="space-y-4">
               {navigationLinks.map((item) => (
@@ -104,7 +113,9 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">Resources</h3>
+            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">
+              Resources
+            </h3>
 
             <ul className="space-y-4">
               {resourceLinks.map((item) => (
@@ -122,7 +133,9 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">Legal</h3>
+            <h3 className="mb-6 text-sm font-semibold tracking-wider uppercase">
+              Legal
+            </h3>
 
             <ul className="space-y-4">
               {legalLinks.map((item) => (
@@ -141,9 +154,9 @@ export default function Footer() {
 
         <div className="border-border my-12 border-t" />
 
-        <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-5 text-center md:flex-row md:text-left">
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Satya Prakash.Crafted with Next.js.
+            © {new Date().getFullYear()} Satya Prakash. Crafted with Next.js.
           </p>
 
           <div className="flex items-center gap-3">

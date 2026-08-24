@@ -32,7 +32,7 @@ export default function AboutMe({ imageSrc, imageAlt, intro, name, role, bio }: 
 
           <p className="mt-3 text-lg font-medium text-emerald-500">{role}</p>
 
-          <p className="text-muted-foreground mt-6 text-base leading-8">{bio}</p>
+          <p className="mt-6 text-base leading-8 text-slate-700 dark:text-slate-300">{bio}</p>
         </article>
       }
     />

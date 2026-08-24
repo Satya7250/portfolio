@@ -1,20 +1,5 @@
 'use client';
 
-/**
- * OrbitFeatures
- * -------------
- * A premium, dark, glassmorphic "orbit" visualization for a developer
- * portfolio hero/features section. A pulsing core sits at the center,
- * surrounded by four floating feature cards (top / left / right / bottom),
- * slowly rotating rings, and drifting particles.
- *
- * Stack: Next.js 16, React 19, TypeScript, Tailwind CSS v4, motion/react, shadcn/ui
- *
- * Usage:
- *   import { OrbitFeatures } from "@/components/orbit-features";
- *   <OrbitFeatures />
- */
-
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Bot, MonitorSmartphone, ServerCog, Smartphone, type LucideIcon } from 'lucide-react';
@@ -31,6 +16,8 @@ interface OrbitFeatureConfig {
   position: OrbitPosition;
   title: string;
   subtitle: string;
+  /** Longer, crawlable description used only in the sr-only summary + JSON-LD. */
+  description: string;
   Icon: LucideIcon;
   /** Tailwind classes — kept fully literal so the JIT compiler can see them */
   iconColor: string;
@@ -48,6 +35,8 @@ const FEATURES: OrbitFeatureConfig[] = [
     position: 'top',
     title: 'Modern Web Apps',
     subtitle: 'Next.js • React • TypeScript',
+    description:
+      'Building fast, modern web applications with Next.js, React, and TypeScript.',
     Icon: MonitorSmartphone,
     iconColor: 'text-emerald-400',
     iconBg: 'bg-emerald-500/10',
@@ -62,6 +51,8 @@ const FEATURES: OrbitFeatureConfig[] = [
     position: 'left',
     title: 'AI Applications',
     subtitle: 'LLMs • RAG • Automation',
+    description:
+      'Designing AI-powered applications using large language models, retrieval-augmented generation, and automation pipelines.',
     Icon: Bot,
     iconColor: 'text-purple-400',
     iconBg: 'bg-purple-500/10',
@@ -75,7 +66,9 @@ const FEATURES: OrbitFeatureConfig[] = [
     id: 'backend',
     position: 'right',
     title: 'Backend & Cloud',
-    subtitle: 'Node.js • Spring Boot • PostgreSQL',
+    subtitle: 'Node.js • Express • PostgreSQL',
+    description:
+      'Architecting backend services and cloud infrastructure with Node.js, Express, and PostgreSQL.',
     Icon: ServerCog,
     iconColor: 'text-blue-400',
     iconBg: 'bg-blue-500/10',
@@ -90,6 +83,7 @@ const FEATURES: OrbitFeatureConfig[] = [
     position: 'bottom',
     title: 'Mobile Apps',
     subtitle: 'React Native • Expo',
+    description: 'Developing cross-platform mobile apps with React Native and Expo.',
     Icon: Smartphone,
     iconColor: 'text-orange-400',
     iconBg: 'bg-orange-500/10',
@@ -149,37 +143,43 @@ function OrbitCore({ compact = false }: { compact?: boolean }) {
         compact ? 'h-20 w-20' : 'h-22 w-22 lg:h-24 lg:w-24',
       )}
     >
-      {/* Ambient blurred glow layers */}
+      {/* Ambient blurred glow — pure opacity fade, kept even under reduced motion */}
       <motion.div
         aria-hidden
         className="absolute -inset-10 rounded-full bg-linear-to-br from-emerald-500/20 via-purple-500/10 to-blue-500/20 blur-3xl"
-        animate={reduceMotion ? undefined : { opacity: [0.35, 0.65, 0.35] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ opacity: reduceMotion ? [0.4, 0.55, 0.4] : [0.35, 0.65, 0.35] }}
+        transition={{ duration: reduceMotion ? 8 : 6, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <motion.div
-        aria-hidden
-        className="bg-foreground/5 absolute -inset-4 rounded-full blur-2xl"
-        animate={reduceMotion ? undefined : { scale: [1, 1.08, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-      />
+
+      {/* Scale "breathing" glow — spatial, so it's dropped under reduced motion */}
+      {!reduceMotion && (
+        <motion.div
+          aria-hidden
+          className="bg-foreground/5 absolute -inset-4 rounded-full blur-2xl"
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
 
       {/* Glass shell */}
       <div className="border-border bg-background/90 absolute inset-0 rounded-full border shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl" />
 
-      {/* Soft pulse ring */}
-      <motion.div
-        aria-hidden
-        className="border-foreground/20 absolute inset-0 rounded-full border"
-        animate={reduceMotion ? undefined : { scale: [1, 1.25, 1], opacity: [0.5, 0, 0.5] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeOut' }}
-      />
+      {/* Soft pulse ring — spatial (scale), dropped under reduced motion */}
+      {!reduceMotion && (
+        <motion.div
+          aria-hidden
+          className="border-foreground/20 absolute inset-0 rounded-full border"
+          animate={{ scale: [1, 1.25, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeOut' }}
+        />
+      )}
 
-      {/* Inner sheen */}
+      {/* Inner sheen — pure opacity fade, kept even under reduced motion */}
       <motion.div
         aria-hidden
         className="from-foreground/10 absolute inset-3 rounded-full bg-linear-to-br to-transparent"
-        animate={reduceMotion ? undefined : { opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ opacity: reduceMotion ? [0.35, 0.5, 0.35] : [0.3, 0.6, 0.3] }}
+        transition={{ duration: reduceMotion ? 5 : 3.5, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       <div className="relative z-10 text-center leading-tight">
@@ -205,12 +205,18 @@ function OrbitRings() {
 
   return (
     <>
-      {/* Outer ring — carries one accent-colored dot per feature */}
+      {/* Outer ring — carries one accent-colored dot per feature.
+          Under reduced motion we stop the rotation (spatial) but keep a slow
+          opacity pulse so the ring doesn't read as inert/broken. */}
       <motion.div
         aria-hidden
         className="border-border absolute top-1/2 left-1/2 h-95 w-95 -translate-x-1/2 -translate-y-1/2 rounded-full border"
-        animate={reduceMotion ? undefined : { rotate: 360 }}
-        transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
+        animate={reduceMotion ? { opacity: [0.6, 1, 0.6] } : { rotate: 360 }}
+        transition={
+          reduceMotion
+            ? { duration: 5, repeat: Infinity, ease: 'easeInOut' }
+            : { duration: 26, repeat: Infinity, ease: 'linear' }
+        }
       >
         {OUTER_PARTICLES.map((p, i) => (
           <span
@@ -224,12 +230,16 @@ function OrbitRings() {
         ))}
       </motion.div>
 
-      {/* Middle dashed ring — neutral drifting particles, opposite direction */}
+      {/* Middle dashed ring — same treatment, opposite direction */}
       <motion.div
         aria-hidden
         className="border-border absolute top-1/2 left-1/2 h-64 w-[256px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed"
-        animate={reduceMotion ? undefined : { rotate: -360 }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+        animate={reduceMotion ? { opacity: [0.5, 0.85, 0.5] } : { rotate: -360 }}
+        transition={
+          reduceMotion
+            ? { duration: 6, repeat: Infinity, ease: 'easeInOut' }
+            : { duration: 16, repeat: Infinity, ease: 'linear' }
+        }
       >
         {INNER_PARTICLES.map((p, i) => (
           <motion.span
@@ -239,7 +249,7 @@ function OrbitRings() {
             style={{
               transform: `rotate(${p.angle}deg) translateX(${innerRadius}px) translate(-50%, -50%)`,
             }}
-            animate={reduceMotion ? undefined : { opacity: [0.15, 0.75, 0.15] }}
+            animate={{ opacity: [0.15, 0.75, 0.15] }}
             transition={{
               duration: 3.5,
               repeat: Infinity,
@@ -292,14 +302,45 @@ function OrbitCard({ feature, onHoverStart, onHoverEnd }: OrbitCardProps) {
             feature.iconBg,
           )}
         >
-          <Icon className={cn('h-4 w-4', feature.iconColor)} />
+          <Icon aria-hidden className={cn('h-4 w-4', feature.iconColor)} />
         </div>
         <div className="min-w-0">
-          <p className="text-foreground truncate text-[13px] font-semibold">{feature.title}</p>
+          {/* h3: real heading, not a styled <p> — gives crawlers a content
+              hierarchy (h2 section title -> h3 per service) instead of an
+              orbit full of anonymous <p> tags. */}
+          <h3 className="text-foreground truncate text-[13px] font-semibold">{feature.title}</h3>
           <p className="text-muted-foreground truncate text-[11px]">{feature.subtitle}</p>
         </div>
       </div>
     </motion.div>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// Structured data (JSON-LD)
+// ----------------------------------------------------------------------------
+
+function OrbitFeaturesJsonLd() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: FEATURES.map((f, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: f.title,
+        description: f.description,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
   );
 }
 
@@ -311,7 +352,22 @@ export function OrbitFeatures() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <div className="relative flex w-full max-w-130 items-center justify-center">
+    <section
+      aria-labelledby="orbit-features-heading"
+      className="relative flex w-full max-w-130 items-center justify-center"
+    >
+      {/* Real heading for the section. Visually hidden (the "Full Stack
+          Developer" core communicates this visually) but present in the DOM
+          so screen readers and search engines get an actual section title
+          instead of inferring one from decorative markup. */}
+      <h2 id="orbit-features-heading" className="sr-only">
+        What I build: full-stack development services
+      </h2>
+      <p className="sr-only">
+        {FEATURES.map((f) => f.description).join(' ')}
+      </p>
+      <OrbitFeaturesJsonLd />
+
       {/* Ambient background wash, centered on this component */}
       <div
         aria-hidden
@@ -320,7 +376,10 @@ export function OrbitFeatures() {
 
       <div className="relative flex w-full flex-col items-center">
         {/* ---------------- Desktop / tablet orbit ---------------- */}
-        <div className="relative hidden h-105 w-full items-center justify-center [--orbit-radius:150px] md:flex lg:h-120 lg:[--orbit-radius:180px]">
+        <div
+          aria-hidden
+          className="relative hidden h-105 w-full items-center justify-center [--orbit-radius:150px] md:flex lg:h-120 lg:[--orbit-radius:180px]"
+        >
           <OrbitRings />
 
           {FEATURES.map((feature) => (
@@ -351,7 +410,9 @@ export function OrbitFeatures() {
 
         {/* ---------------- Mobile: stacked, static ---------------- */}
         <div className="flex flex-col items-center md:hidden">
-          <OrbitCore compact />
+          <div aria-hidden>
+            <OrbitCore compact />
+          </div>
 
           <div className="mt-10 flex w-full max-w-sm flex-col gap-3">
             {FEATURES.map((feature) => {
@@ -370,13 +431,15 @@ export function OrbitFeatures() {
                       feature.iconBg,
                     )}
                   >
-                    <Icon className={cn('h-4.5 w-4.5', feature.iconColor)} />
+                    <Icon aria-hidden className={cn('h-4.5 w-4.5', feature.iconColor)} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-foreground truncate text-[14px] font-semibold">
+                    <h3 className="text-foreground truncate text-[14px] font-semibold">
                       {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground truncate text-[12px]">
+                      {feature.subtitle}
                     </p>
-                    <p className="text-muted-foreground truncate text-[12px]">{feature.subtitle}</p>
                   </div>
                 </div>
               );
@@ -384,7 +447,7 @@ export function OrbitFeatures() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
