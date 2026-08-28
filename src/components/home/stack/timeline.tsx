@@ -9,10 +9,18 @@ interface TimelineProps {
   onChange: (index: number) => void;
 }
 
+const MOBILE_TAB_THEME = {
+  activeButton: 'text-foreground border-foreground/80 border-[1.5px] opacity-100',
+  inactiveButton: 'text-muted-foreground border-border border opacity-60 hover:opacity-100',
+  activeLabel: 'text-foreground opacity-100',
+  inactiveLabel: 'text-muted-foreground opacity-0',
+} as const;
+
 export default function Timeline({ categories, active, onChange }: TimelineProps) {
   return (
     <nav aria-label="Technology categories" className="flex w-full flex-col">
-      <ul className="space-y-3">
+      {/* ---------- Desktop / tablet (unchanged, ≥768px) ---------- */}
+      <ul className="hidden space-y-3 md:block">
         {categories.map((category, index) => {
           const isActive = index === active;
 
@@ -53,6 +61,42 @@ export default function Timeline({ categories, active, onChange }: TimelineProps
                   {category.title}
                 </span>
               </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* ---------- Mobile (<768px): outlined circular tabs, logo-style ---------- */}
+      <ul className="flex w-full flex-row flex-wrap justify-center gap-4 pt-1 pb-3 md:hidden">
+        {categories.map((category, index) => {
+          const isActive = index === active;
+
+          return (
+            <li key={category.id} className="flex flex-col items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => onChange(index)}
+                aria-current={isActive ? 'true' : undefined}
+                aria-label={`Show ${category.title} technologies`}
+                title={category.title}
+                className={`focus-visible:ring-primary/30 relative flex h-12 w-12 items-center justify-center rounded-full bg-transparent text-lg font-light tracking-wide transition-all duration-300 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-90 ${
+                  isActive
+                    ? `${MOBILE_TAB_THEME.activeButton} scale-105`
+                    : MOBILE_TAB_THEME.inactiveButton
+                } `}
+              >
+                {category.title.charAt(0).toUpperCase()}
+              </button>
+
+              {/* Floating label under the active tab */}
+              <span
+                className={`text-[10px] font-light tracking-wide whitespace-nowrap transition-all duration-300 ${
+                  isActive ? MOBILE_TAB_THEME.activeLabel : MOBILE_TAB_THEME.inactiveLabel
+                } `}
+                aria-hidden="true"
+              >
+                {category.title}
+              </span>
             </li>
           );
         })}
